@@ -8,7 +8,14 @@ sys.path.insert(0, os.path.abspath('..'))
 sys.path.insert(0, os.path.abspath('.'))
 sys.path.insert(0, os.path.join(os.path.split(__file__)[0], '_themes'))
 
-import alabaster
+# on_rtd is whether we are on readthedocs.org, this line of code grabbed from docs.readthedocs.org
+on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
+
+  # only import and set the theme if we're building docs locally
+if not on_rtd:
+    import alabaster
+    html_theme = 'sphinx_rtd_theme'
+    html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 
 extensions = ['alabaster']
 templates_path = ['_templates']
