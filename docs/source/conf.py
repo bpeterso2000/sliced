@@ -16,8 +16,8 @@ if not on_rtd:
     import alabaster
     html_theme = 'alabaster'
     html_theme_path = [alabaster.get_html_theme_path()]
+    extensions = ['alabaster']
 
-extensions = ['alabaster']
 templates_path = ['_templates']
 source_suffix = '.rst'
 master_doc = 'index'
