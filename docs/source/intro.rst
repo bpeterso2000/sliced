@@ -40,7 +40,7 @@ cut <http://en.wikipedia.org/wiki/Cut_(Unix)>`_ command:
 
 
 Emulating cut
--------------
+^^^^^^^^^^^^^
 
 **sliced** supports emulation of cut's field grammar. **slicing_demo.py**
 is included to help introduce you to sliced's basic functions:
@@ -80,7 +80,7 @@ to show the user where the error occurred.
 
 
 Extending cut
--------------
+^^^^^^^^^^^^^
 
 Cut's field arg grammar is nice, but what if we want to support all the cool
 features found in Python slicing?
@@ -191,7 +191,7 @@ CSV file you could do that without having to determine the actual column
 number.
 
 Additional features
--------------------
+^^^^^^^^^^^^^^^^^^^
 
 This page is intended only as a high-level introduction to `sliced`, additional
 features are described elsewhere.
