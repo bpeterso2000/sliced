@@ -52,15 +52,15 @@ Stepped intervals
 
 .. image:: _static/figure4.png
 
-The terms **step** and **stride** are sometimes used interchangably.  When an
+The terms **step** and **stride** are sometimes used interchangeably.  When an
 interval's stride is either not specified or set to **None** the
 step-size will be default to 1.
 
 Reversed intervals
 ------------------
 
-Reversed strides are occassionaly a point of confusion for people just starting
-out with Python because the open end is flipped.
+Reversed strides are occassionally a point of confusion for people just
+starting out with Python because the open end is flipped.
 
 .. code-block:: python
 
@@ -78,12 +78,8 @@ Extended slices
 ---------------
 Another good place to read up on slicing is this
 `extended slices <https://docs.python.org/2.3/whatsnew/section-slices.html>`_
-page on the official Python webiste.  It's written for Python 2.3, but the
+page on the official Python website.  It's written for Python 2.3, but the
 information is still relevant in current versions of Python. If you want to
 work through the examples in Python 3.x then convert the range bjects into
 lists. For example where it shows :code:`range(10)` replace the code with
 :code:`list(range(10))`.
-
-.. toctree::
-   :maxdepth: 2
-   :hidden:

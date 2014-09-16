@@ -6,7 +6,7 @@ from .grammar import Grammar
 from .interval import Interval
 
 
-def get_slice(seq, text, dialect=None):
+def slice_(seq, text, dialect=None):
     """
     extract columns from rows using a single slice
     ----------------------------------------------
@@ -29,7 +29,7 @@ def get_slice(seq, text, dialect=None):
     return (i[slice_] for i in seq)
 
 
-def sliced(seq, text, dialect=None):
+def slices(seq, text, dialect=None):
     """
     extract columns from rows using one or more slice strings
     ---------------------------------------------------------

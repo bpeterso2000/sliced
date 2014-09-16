@@ -9,17 +9,13 @@ operators and provides relational operators for the endpoints.
 Endpoint Attributes & Properties
 --------------------------------
 
-+------------+-------------------------------+
-| Attributes | EndPoint Properties (boolean) |
-+============+=============+=================+
-| * origin   | * bounded   | * absolute      |
-| * value    | * unbounded | * relative      |
-+------------+-------------+-----------------+
++------------+----------------------------+
+| Attributes | EndPoint Properties (bool) |
++============+=============+==============+
+| * origin   | * bounded   | * absolute   |
+| * value    | * unbounded | * relative   |
++------------+-------------+--------------+
 
 Dependencies
 ------------
 None
-
-.. toctree::
-   :maxdepth: 2
-   :hidden:

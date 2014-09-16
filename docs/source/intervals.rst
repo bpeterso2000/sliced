@@ -40,11 +40,12 @@ Interval Properties (boolean)
 
 +--------------+-----------------+--------------+----------------+
 | * empty      | * bounded       | * closed     | * half-closed  |
-| * proper     | * left_bounded  | * left_open  | * left_closed  |
-| * degenerate | * right_bounded | * right_open | * right_closed |
+| * proper     | * left_bounded  | * left-open  | * left-closed  |
+| * degenerate | * right_bounded | * right-open | * right-closed |
 | * reversed   | * unbounded     | * open       | * half-open    |
 +--------------+-----------------+--------------+----------------+
 
+<http://en.wikipedia.org/wiki/Interval_(mathematics))#Terminology>_
 
 Interval Methods
 ----------------
@@ -56,12 +57,41 @@ Interval Methods
 | * to_unit_based_endpoints   | * to_open_interval         |
 +-----------------------------+----------------------------+
 
+Method Signatures
+^^^^^^^^^^^^^^^^^
+All returned `start`, `stop` values are integers and the `to_slice` method
+returns a Python slice object ...
+
+.. code-block:: python
+
+    interval = Interval(start=None, stop=None, step=None,
+                        type_='closed', origin=1)
+
+    interval.set(self, start=None, stop=None, step=None)
+
+    start, stop = interval.to_zero_based(start=False, stop=False)
+    start, stop = interval.to_unit_based(start=False, stop=False)
+
+    start, stop = to_open(start=False, stop=False, step=False,
+                          from_type=False, to_origin=False):
+    start, stop = to_left_open(start=False, stop=False, step=False,
+                               from_type=False, to_origin=False)
+    start, stop = to_right_open(start=False, stop=False, step=False,
+                               from_type=False, to_origin=False)
+    start, stop = to_open(start=False, stop=False, step=False,
+                          from_type=False, to_origin=False)
+
+    slice_ = interval.to_slice(start=None, stop=None, step=None)
+
+.. Attention:: :code:`False is not None`
+  Start & stop can be set to `False`, `None` or an `int`.  When set to False
+  the arg will bet set to the value of the class instance property; otherwise,
+  the arg will be hard-coded with the value provided.  Allowing any of the args
+  to be hard-coded allows any instance of an Interval to be used a calculator
+  for different origins & interval types.
+
 
 Dependencies
 ------------
 
 Requires EndPoint class for handling lower & upper bound.
-
-.. toctree::
-   :maxdepth: 2
-   :hidden:

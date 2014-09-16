@@ -12,7 +12,7 @@ from __future__ import print_function
 
 import sliced
 from ._compat import STRING_TYPES
-from .core import get_slice, sliced, cut
+from .core import slice_, slices, cut
 from .endpoint import EndPoint
 from .exceptions import EndPointValueError, OriginValueError, \
     InvalidIntervalType, InvalidStepSize, InvalidSliceString
@@ -20,5 +20,12 @@ from .grammar import Grammar
 from .interval import Interval
 
 
-__version__ = '0.5'
+__all__ = [
+    'slices', 'slice_', 'cut',
+    'EndPoint', 'Interval', 'Grammar',
+    'EndPointValueError', 'OriginValueError',
+    'InvalidIntervalType', 'InvalidStepSize', 'InvalidSliceString',
+]
 
+
+__version__ = '0.5'

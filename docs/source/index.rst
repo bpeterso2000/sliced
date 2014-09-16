@@ -1,13 +1,14 @@
-.. image:: _static/logo.png
-
 Welcome to Sliced
 =================
 
-The following material describes the first set of tools released into the kit ...
+.. image:: _static/logo.png
+:scale: 55%
 
+a Python slicing toolkit.
 
 Slicing for users
 -----------------
+
 
 Python slices are beautiful -- `well at least for developers
 <http://python-history.blogspot.com/2013/10/why-python-uses-0-based-indexing.html>`_;
@@ -76,7 +77,7 @@ is included to help introduce you to sliced's basic functions:
 Reporting bad grammar
 ^^^^^^^^^^^^^^^^^^^^^
 If a user enters an invalid slice string (field arg) `sliced` has the ability
-to show the user where the error occured.
+to show the user where the error occurred.
 
 .. code-block:: bash
 
@@ -92,39 +93,59 @@ Extending cut
 Cut's field arg grammar is nice, but what if we want to support all the cool
 features found in Python slicing?
 
-.. sidebar:: Confused?
-
-    See :doc:`Python slicing <python_slices>`.
-
 Relative indices
 ^^^^^^^^^^^^^^^^
 Support for specifying endpoints relative to the last position in the sequence.
+
+.. sidebar:: Relative index example
+
+    .. code-block:: python
+        a[-1]    # last item in the sequence
+        a[-2:]   # last 2 items in the sequence
+        a[:-2]   # up to, but not including the last 2 items
 
 Stepped intervals
 ^^^^^^^^^^^^^^^^^
 Support for stepping through intervals at specified length (stride).
 
+.. sidebar:: Stepped interval example
+
+    .. code-block:: python
+        a[::1]   # every item in the sequence (default)
+        a[::2]   # every other item in the sequence
+
+        >>> a = [0, 1, 2, 3, 4, 5, 6]
+        >>> a[::3]
+        [0, 3, 6]
+
 Reversed intervals
 ^^^^^^^^^^^^^^^^^^
-
 Ability to change the direction of the interval.
 
-New syntax
-^^^^^^^^^^
-- The range separator will need to be changed, since the dash character could
-  cause ambiguity with the minus sign used to specify relative indices.
-- An interval step size separator will need to be added.
+.. sidebar:: Reversed interval example
 
-To accomplish this let's use native Python slice syntax, but then extended it
-with the following features found in cut:
+    .. code-block:: python
+        >>> s='abcd'
+        >>> s[::-1]
+        'dcba'
+        >>> s[::-2]
+        'db'
+
+The Extended syntax
+^^^^^^^^^^^^^^^^^^^
+It is easier to extend Python slicing syntax to support `cut's` features rather
+than the other way around.  The reason is that the dash used in `cut` to
+separate the range could cause ambiguity with the minus sign used to specify
+relative indices.  Here are the features found in `cut` that we will need to
+add:
+
+- Support for slice lists (zero or more slices separated by commas). 
+- Unit-based, close-intervals instead of zero-based, right-open intervals.
 
 .. sidebar:: Slice lists
 
     Included in Python's official grammar, but not implemented into the Python
-    language. `sliced` supports them.
-
-- Support for slice lists (zero or more slices separated by commas). 
-- Unit-based, close-intervals instead of zero-based, right-open intervals.
+    language. `sliced` provides support for slice list notation.
 
 Examples
 ^^^^^^^^
@@ -159,8 +180,8 @@ Examples
 
 Support for intervals
 ---------------------
-
 `sliced` also supports grammars that allow the interval type to be specified.
+
 For example Ruby range syntax uses a range separator of '...' to indicate a
 closed interval (include both endpoints) or '....' to indicate a right-open
 interval (don't include stop endpoint).
@@ -169,22 +190,16 @@ Dot notation, extends the Python slice grammar to allow open, left-open,
 right-open or closed intervals to be specified.  To learn more visit the
 :doc:`grammar` section of this document.
 
+The ability to specify the interval type in the syntax may not seem very useful
+when used with numeric indices, since it would be easy for the user to just
+add or subtract one from the endpoint, but it will become more relevant when
+support for selecting items by position header names is added to the toolkit.
+For example if you wanted to pull every column after a certain header in a
+CSV file you could do that without having to determine the actual column
+number.
 
 Additional features
 -------------------
 
 This page is intended only as a high-level introduction to `sliced`, additional
 features are described elsewhere.
-
-.. toctree::
-   :maxdepth: 2
-   :hidden:
-
-   index
-   examples
-   howto
-   python_slices
-   endpoints
-   intervals
-   grammar
-   guiding_principles

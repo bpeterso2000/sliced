@@ -35,7 +35,3 @@ This example is from 'slicing_demo` which is included in the `sliced` package.
                         print('InvalidSliceString: {}'.format(error))
                     except sliced.EndPointValueError as error:
                         print('EndPointValueError: {}'.format(error))
-
-.. toctree::
-   :maxdepth: 2
-   :hidden:

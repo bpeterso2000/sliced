@@ -1,6 +1,7 @@
 import sys
 
-import sliced
+from sliced import slices
+from sliced import Grammar, InvalidSliceString, EndPointValueError
 
 if sys.version_info.major < 3:
     input = raw_input
@@ -13,9 +14,9 @@ rows = [
 
 dialect = True
 while dialect:
-    sliced.Grammar().list_dialects()
+    Grammar().list_dialects()
     dialect = input('\nEnter dialect? ')
-    if dialect and dialect in sliced.Grammar().get_dialects():
+    if dialect and dialect in Grammar().get_dialects():
 
         columns = True
         while columns:
@@ -24,9 +25,9 @@ while dialect:
             if columns:
 
                 try:
-                    for row in sliced.sliced(rows, columns, dialect):
+                    for row in slices(rows, columns, dialect):
                         print(row)
-                except sliced.InvalidSliceString as error:
+                except InvalidSliceString as error:
                     print('InvalidSliceString: {}'.format(error))
-                except sliced.EndPointValueError as error:
+                except EndPointValueError as error:
                     print('EndPointValueError: {}'.format(error))
