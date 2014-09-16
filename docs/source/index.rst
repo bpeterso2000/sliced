@@ -6,9 +6,10 @@ Welcome to Sliced
 
 a Python slicing toolkit.
 
-Contents:
+.. Contents:
 
 .. toctree::
+   :maxdepth: 1
 
    intro
    howto
