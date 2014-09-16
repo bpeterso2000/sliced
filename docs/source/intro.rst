@@ -85,42 +85,44 @@ Extending cut
 Cut's field arg grammar is nice, but what if we want to support all the cool
 features found in Python slicing?
 
-.. sidebar:: Relative index example
-
-   :code:`a[-1]    # last item in the sequence`
-   :code:`a[-2:]   # last 2 items in the sequence`
-   :code:`a[:-2]   # up to, but not including the last 2 items`
-
 
 Relative indices
 ^^^^^^^^^^^^^^^^
 Support for specifying endpoints relative to the last position in the sequence.
 
-.. sidebar:: Stepped interval example
+.. code-block:: python
 
-   :code:`a[::1]   # every item in the sequence (default)`
-   :code:`a[::2]   # every other item in the sequence`
+   a[-1]    # last item in the sequence
+   a[-2:]   # last 2 items in the sequence
+   a[:-2]   # up to, but not including the last 2 items
 
-   :code:`>>> a = [0, 1, 2, 3, 4, 5, 6]`
-   :code:`>>> a[::3]`
-   :code:`[0, 3, 6]`
 
 Stepped intervals
 ^^^^^^^^^^^^^^^^^
 Support for stepping through intervals at specified length (stride).
 
-.. sidebar:: Reversed interval example
+.. code-block:: python
 
-   :code:`>>> s='abcd'
-   :code:`>>> s[::-1]`
-   :code:`'dcba'`
-   :code:`>>> s[::-2]`
-   :code:`'db'`
+   a[::1]   # every item in the sequence (default)
+   a[::2]   # every other item in the sequence`
+
+   >>> a = [0, 1, 2, 3, 4, 5, 6]
+   >>> a[::3]
+   [0, 3, 6]
+
 
 
 Reversed intervals
 ^^^^^^^^^^^^^^^^^^
 Ability to change the direction of the interval.
+
+.. code-block:: python
+
+   >>> s='abcd'
+   >>> s[::-1]   # reverse the string
+   'dcba'
+   >>> s[::-2]   # every other item in reverse order
+   'db'
 
 
 The Extended syntax
