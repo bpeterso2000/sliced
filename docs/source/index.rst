@@ -1,8 +1,8 @@
-Welcome to Sliced
-=================
+Welcome to Sliced's documentation
+=================================
 
 .. image:: _static/logo.png
-   :scale: 50 %
+   :scale: 35 %
 
 A Python slicing toolkit.
 

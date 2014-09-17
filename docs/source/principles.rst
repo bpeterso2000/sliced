@@ -1,4 +1,4 @@
-Guiding Principles
+Guiding principles
 ==================
 
 Ensure portability

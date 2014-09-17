@@ -1,5 +1,5 @@
-Slicing dialects & grammars
-===========================
+Learning dialects & grammars
+============================
 
 The Grammar class allows different dialects to be used to enter slice
 information. It is able to provide location information for syntax errors and
@@ -35,14 +35,14 @@ Methods
 Built-in dialects
 ^^^^^^^^^^^^^^^^^
 
-+===================+
-| Built-in dialects |
-+===================+
-| * Python Slice    |
-| * Unix Cut        |
-| * Dot Notation    |
-| * Ruby Range      |
-+-------------------+
+=================
+Built-in dialects
+=================
+* Python Slice
+* Unix Cut
+* Dot Notation
+* Ruby Range
+=================
 
 
 Exception Handling
