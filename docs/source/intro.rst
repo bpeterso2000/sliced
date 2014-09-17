@@ -86,9 +86,10 @@ Cut's field arg grammar is nice, but what if we want to support all the cool
 features found in Python slicing?
 
 
-Relative indices
-^^^^^^^^^^^^^^^^
-Support for specifying endpoints relative to the last position in the sequence.
+.. topic:: Relative indices
+
+    Support for specifying endpoints relative to the last position in the
+    sequence.
 
 .. code-block:: python
 
@@ -97,9 +98,9 @@ Support for specifying endpoints relative to the last position in the sequence.
    a[:-2]   # up to, but not including the last 2 items
 
 
-Stepped intervals
-^^^^^^^^^^^^^^^^^
-Support for stepping through intervals at specified length (stride).
+.. topic:: Stepped intervals
+
+    Support for stepping through intervals at specified length (stride).
 
 .. code-block:: python
 
@@ -111,10 +112,9 @@ Support for stepping through intervals at specified length (stride).
    [0, 3, 6]
 
 
+.. topic:: Reversed intervals
 
-Reversed intervals
-^^^^^^^^^^^^^^^^^^
-Ability to change the direction of the interval.
+    Ability to change the direction of the interval.
 
 .. code-block:: python
 

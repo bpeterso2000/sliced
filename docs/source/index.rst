@@ -15,5 +15,5 @@ a Python slicing toolkit
    intro
    intervals
    grammar
-   examples
    slices
+   examples
