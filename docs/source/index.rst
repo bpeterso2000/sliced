@@ -1,13 +1,10 @@
-Welcome to Sliced's documentation
-=================================
+Welcome to Sliced
+=================
 
 .. image:: _static/logo.png
    :scale: 35 %
 
-A Python slicing toolkit.
-
-The kit currently includes support for slicing with different types of
-intervals and built-in/custom slicing dialects & grammars.
+a Python slicing toolkit
 
 .. Contents:
 

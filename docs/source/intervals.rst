@@ -1,5 +1,5 @@
-Masetering intervals
-====================
+Mastering intervals
+===================
 
 The Interval class allows slicing, introspection and conversion of closed,
 left-open, right-open and open intervals. It also supports conversion between
@@ -98,7 +98,7 @@ Requires EndPoint class for handling lower & upper bound.
 
 
 Endpoints
-=========
+---------
 
 The EndPoint class is used for handling the interval's lower and upper bounds.
 It supports zero and unit-based endpoints along with unbounded conditions.
@@ -106,7 +106,7 @@ It also ensures endpoint values remain sane when used with add and subtract
 operators and provides relational operators for the endpoints.
 
 Endpoint Attributes & Properties
---------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 +------------+----------------------------+
 | Attributes | EndPoint Properties (bool) |
