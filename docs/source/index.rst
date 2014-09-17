@@ -2,20 +2,21 @@ Welcome to Sliced
 =================
 
 .. image:: _static/logo.png
-   :scale: 35 %
+   :scale: 50 %
 
-a Python slicing toolkit.
+A Python slicing toolkit.
+
+The kit currently includes support for slicing with different types of
+intervals and built-in/custom slicing dialects & grammars.
 
 .. Contents:
 
 .. toctree::
    :maxdepth: 1
 
-   intro
    howto
-   slices
-   examples
+   intro
    intervals
-   endpoints
    grammar
-   principles
+   examples
+   slices

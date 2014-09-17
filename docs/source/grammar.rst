@@ -1,5 +1,5 @@
-Grammar
-=======
+Slicing dialects & grammars
+===========================
 
 The Grammar class allows different dialects to be used to enter slice
 information. It is able to provide location information for syntax errors and

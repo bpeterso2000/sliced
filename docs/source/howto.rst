@@ -1,10 +1,10 @@
-How-to
-======
+Sliced how-to
+=============
 
-.. sidebar:: Visualizing a sequence of sequences
+.. sidebar:: Visualizing 2-d Sequences
 
-    If you're used to spreadsheets then it may be easier to visualize the outer
-    sequence as rows, the inner sequence as columns and the objects as cells.
+    A 2-d sequence can be though of as a spreadsheet, where the outer sequence
+    is rows, the inner sequence is columns and the objects are cells.
 
 Sliced comes packaged with three (3) high-level helper functions used to slice
 objects from a sequence of sequences. These helpers are wrappers around the
@@ -12,14 +12,14 @@ Grammar & Interval classes and each returns a generator to effeciently produce
 a list of sliced columns for each row.
 
 
-Helper Functions
+Helper functions
 ----------------
 
-========  ===============================================================
-`slices`  slice a sequence using specified dialect (supports slice lists)
-`slice_`  same as slices (faster, but doesn't support slice lists)
-`cut`     same a slices, but dialect is hard-coded to 'unix_cut'
-========  ===============================================================
+============  ===============================================================
+**`slices`**  slice a sequence using specified dialect (supports slice lists)
+**`slice_`**  same as slices (faster, but doesn't support slice lists)
+**`cut`**     same a slices, but dialect is hard-coded to 'unix_cut'
+============  ===============================================================
 
 Examples::
 
@@ -89,7 +89,7 @@ Examples::
 
     Additional features in `Slicing with dialects & grammars`_
 
-Parsing Exceptions
+Parsing exceptions
 ^^^^^^^^^^^^^^^^^^
 
 .. note::

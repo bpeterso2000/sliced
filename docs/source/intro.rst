@@ -1,5 +1,5 @@
 Slicing for users
------------------
+=================
 
 
 Python slices are beautiful -- `well at least for developers

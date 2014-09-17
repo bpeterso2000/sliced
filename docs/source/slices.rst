@@ -1,5 +1,5 @@
-Python Slicing
-==============
+Visualizing slicing
+===================
 
 Python slices are `right-open intervals
 <http://en.wikipedia.org/wiki/Interval_(mathematics)#Terminology>`_ consisting

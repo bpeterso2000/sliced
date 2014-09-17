@@ -1,5 +1,5 @@
-Demonstration
-=============
+Sliced demonstration
+====================
 
 This example is from 'slicing_demo.py` which is included in the `sliced` package::
 
@@ -28,13 +28,16 @@ This example is from 'slicing_demo.py` which is included in the `sliced` package
 
                     try:
 
+                        # this is the workhorse function
                         rows = sliced.slices(rows, columns, dialect)
 
                         for row in rows:
                             print(row)
 
                     except sliced.InvalidSliceString as error:
+                        # error while parsing text against the grammar
                         print('InvalidSliceString: {}'.format(error))
 
                     except sliced.EndPointValueError as error:
+                        # when origin=1, start & stop can't equal zero
                         print('EndPointValueError: {}'.format(error))
