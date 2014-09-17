@@ -1,44 +1,65 @@
-How-To
+How-to
 ======
 
-See :doc::`examples`_.
+.. sidebar:: Visualizing a sequence of sequences
 
-.. Attention::
+    If you're used to spreadsheets then it may be easier to visualize the outer
+    sequence as rows, the inner sequence as columns and the objects as cells.
 
-    This page is current under construction.
-
-
-Sliced helper functions
------------------------
 Sliced comes packaged with three (3) high-level helper functions used to slice
-objects from a sequence of sequences.  If you're used to spreadsheets then it
-may be easier to visualize the outer sequence as rows, the inner sequence as
-columns and the objects as cells.  These helper functions are wrappers around
-the Grammar & Interval classes, they return a generator used to produce a list
-of sliced columns for each row.
-
-+--------+-----------------------------------------------------------------+
-| slices | slice a sequence using specified dialect (supports slice lists) |
-+--------+-----------------------------------------------------------------+
-| slice_ | same as slices (faster, but doesn't support slice lists)        |
-+--------+-----------------------------------------------------------------+
-| cut    | same a slices, but dialect is hard-coded to 'unix_cut'          |
-+--------+-----------------------------------------------------------------+
+objects from a sequence of sequences. These helpers are wrappers around the
+Grammar & Interval classes and each returns a generator to effeciently produce
+a list of sliced columns for each row.
 
 
-Parameters
-^^^^^^^^^^
+Helper Functions
+----------------
 
-+-------------+------------------------------------------------------------------------------+
-| sequence    | this is the 2-d sequence containing the objects to be sliced                 |
-+-------------+------------------------------------------------------------------------------+
-| slicestring | a string in the specified dialect that defines the slices                    |
-+-------------+------------------------------------------------------------------------------+
-| dialect     | a dialect name defined in Grammar, define how the slicestring will be parsed |
-+-------------+------------------------------------------------------------------------------+
+========  ===============================================================
+`slices`  slice a sequence using specified dialect (supports slice lists)
+`slice_`  same as slices (faster, but doesn't support slice lists)
+`cut`     same a slices, but dialect is hard-coded to 'unix_cut'
+========  ===============================================================
 
-Dialects
-^^^^^^^^
+Examples::
+
+    sliced_row_gen = slices(rows, '1, 3, 4:8, -1')
+    sliced_row_gen = slices(rows, '1..10, 14::2', 'dot_notation')
+    sliced_row_gen = slice_(rows, ':8')
+    sliced_row_gen = slice_(rows, '2-4, 7', 'unix-cut')
+    sliced_row_gen = cut(rows, '2-4, 7')
+    sliced_rows = list(cut(rows, '2-4, 7'))
+
+Parameters:
+===========  ==========  ===================================================
+sequence     (Sequence)  a 2-d sequence containing the objects to be sliced
+slicestring  (str)       a slice string in the specified dialect
+dialect      (str)       a dialect name defined in Grammar
+===========  ==========  ===================================================
+
+Intervals
+---------
+
+Examples::
+
+    interval = Interval()
+    interval = Interval(start=2, type_='open')
+    interval = Interval(start=None, stop=None, step=None, type_='closed', origin=1)
+    slice_ = interval.to_slice()
+
+Where `origin` is `0` or `1` and `type_` is one of the following:
+- `closed`
+- `left-open`
+- `right-open`
+- `open`
+
+.. see also::
+
+    Additional features in `Slicing with intervals`_
+
+
+Grammar
+-------
 
 Dialects are described in further detail in the Grammar_ section.  Dialects
 can have custom range separators, step-size separators and list separators.
@@ -48,9 +69,36 @@ expressions. Each dialect includes a dictionary that maps the range separator
 matched during parsing to an interval type: closed, left-open, right-open or
 closed. 
 
+Examples::
 
-slices()
-^^^^^^^^
+    grammar = Grammar()
+    grammar.allow_relative_indices = False
+    grammar.allow_stepped_intervals = False
+    grammar.allow_reversed_intervals = False
+    grammar.allow_slice_lists = False
+
+    grammar = Grammar('python_slice')
+    interval_args_dict = grammar.parse_text('2:14:2')
+    interval = Interval(**interval_args_dict)
+
+    grammar = Grammar('dot_notation')
+    interval_args = grammar.parse('5.:10:2, -4')
+    intervals = (Interval(**i) for i in interval_args)
+
+.. see also::
+
+    Additional features in `Slicing with dialects & grammars`_
+
+Parsing Exceptions
+^^^^^^^^^^^^^^^^^^
+
+.. note::
+
+    under construction
+
+
+slices
+^^^^^^
 
 .. code-block:: python
 

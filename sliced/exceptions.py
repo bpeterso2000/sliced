@@ -18,6 +18,10 @@ class UnknownDialect(Exception):
         self.message = Exception.__init__(self, show_choices(name, dialects))
 
 
+class EndPointZeroNotAllowed(Exception):
+    def __init__(self, message):
+        self.message = Exception.__init__(self, message)
+
 class EndPointValueError(Exception):
     def __init__(self, message):
         self.message = Exception.__init__(self, message)

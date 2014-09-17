@@ -14,8 +14,10 @@ import sliced
 from ._compat import STRING_TYPES
 from .core import slice_, slices, cut
 from .endpoint import EndPoint
-from .exceptions import EndPointValueError, OriginValueError, \
+from .exceptions import OriginValueError, \
+    EndPointValueError, EndPointZeroNotAllowed, \
     InvalidIntervalType, InvalidStepSize, InvalidSliceString
+    
 from .grammar import Grammar
 from .interval import Interval
 
@@ -23,7 +25,7 @@ from .interval import Interval
 __all__ = [
     'slices', 'slice_', 'cut',
     'EndPoint', 'Interval', 'Grammar',
-    'EndPointValueError', 'OriginValueError',
+    'EndPointValueError', 'EndPointZeroNotAllowed', 'OriginValueError',
     'InvalidIntervalType', 'InvalidStepSize', 'InvalidSliceString',
 ]
 

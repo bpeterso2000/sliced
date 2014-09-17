@@ -1,9 +1,7 @@
-Examples
-========
+Demonstration
+=============
 
-This example is from 'slicing_demo` which is included in the `sliced` package.
-
-.. code-block:: python
+This example is from 'slicing_demo.py` which is included in the `sliced` package::
 
     import sys
     import sliced
@@ -29,9 +27,14 @@ This example is from 'slicing_demo` which is included in the `sliced` package.
                 if columns:
 
                     try:
-                        for row in sliced.sliced(rows, columns, dialect):
+
+                        rows = sliced.slices(rows, columns, dialect)
+
+                        for row in rows:
                             print(row)
+
                     except sliced.InvalidSliceString as error:
                         print('InvalidSliceString: {}'.format(error))
+
                     except sliced.EndPointValueError as error:
                         print('EndPointValueError: {}'.format(error))
