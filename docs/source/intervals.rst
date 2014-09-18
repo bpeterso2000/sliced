@@ -28,10 +28,10 @@ Interval Types
 ==========  =============  ========================================
  Interval    Notation       Items Sliced from Sequence
 ==========  =============  ========================================
-Closed      [start, stop]  Items from start to stop
-Left-Open   (start, stop]  Items after start to stop
-Right-Open  [start, stop)  Items from start to, but not incl. stop
-Open        (start, stop)  Items after start to, but not incl. stop
+closed      [start, stop]  items from start to stop
+left-open   (start, stop]  items after start to stop
+right-open  [start, stop)  items from start to, but not incl. stop
+open        (start, stop)  items after start to, but not incl. stop
 ==========  =============  ========================================
 
 
@@ -45,7 +45,7 @@ Interval Properties (boolean)
 | * reversed   | * unbounded     | * open       | * half-open    |
 +--------------+-----------------+--------------+----------------+
 
-<http://en.wikipedia.org/wiki/Interval_(mathematics))#Terminology>_
+<http://en.wikipedia.org/wiki/Interval_(mathematics)#Terminology>_
 
 Interval Methods
 ----------------

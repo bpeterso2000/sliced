@@ -38,10 +38,11 @@ Built-in dialects
 =================
 Built-in dialects
 =================
-* Python Slice
-* Unix Cut
-* Dot Notation
-* Ruby Range
+* slice_list (default)
+* python_slice
+* unix_cut
+* dot_notation
+* ruby_range
 =================
 
 

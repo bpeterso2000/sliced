@@ -20,7 +20,7 @@ class Grammar(object):
 
     def __init__(self, dialect=None):
         if dialect is None:
-            dialect = 'python_slice'
+            dialect = 'slice_list'
         self.dialect = dialect
 
     @property
@@ -75,7 +75,7 @@ class Grammar(object):
         for dialect in self.get_dialects():
             print(indent + dialect)
 
-    def _dialect__python_slice(self):
+    def _dialect__slice_list(self):
         self.list_sep = ','
         self.range_sep = ':'
         self.step_sep = ':'
@@ -83,7 +83,11 @@ class Grammar(object):
         self.allow_stepped_intervals = True
         self.allow_reverse_strides = True
         self.allow_slice_list = True
-        self.interval = {}
+        self.interval = {':': 'closed'}
+
+    def _dialect__python_slice(self):
+        self._dialect__python_slice()
+        self.allow_slice_list = False
 
     def _dialect__dot_notation(self):
         self._dialect__python_slice()

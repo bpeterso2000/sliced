@@ -16,7 +16,7 @@ could appear rather scary if they were to be exposed to your users in the wild.
     <http://docs.python.org/2/tutorial/introduction.html#strings>`_,
     after that move on to `understanding indices and slicing
     <http://forums.udacity.com/questions/2017002/python-101-unit-1-understanding-indices-and-slicing>`_,
-    and then visit the :doc:`visualizing Python slicing <python_slices>` section.
+    and then visit the :doc:`visualizing Python slicing <slices>` section.
 
 
 Unit-based, closed-intervals

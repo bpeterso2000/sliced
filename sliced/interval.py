@@ -11,7 +11,7 @@ class Interval(object):
     types = ['closed', 'right-open', 'left-open', 'open']
 
     def __init__(self, start=None, stop=None, step=None,
-                 type_='closed', origin=1, **ignored_kwds):
+                 type_='closed', origin=1):
         """
         :param start: lower bound (default: None -- unbounded)
         :param stop: upper bound (default: None -- unbounded)
