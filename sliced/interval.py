@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import math
 
-from ._compat import STRING_TYPES
 from .endpoint import EndPoint
 from .exceptions import InvalidIntervalType, InvalidStepSize
 
@@ -216,7 +215,7 @@ class Interval(object):
             return start, stop
 
     def _get_type(self, value):
-        if isinstance(value, STRING_TYPES):
+        if isinstance(value, str):
             interval = value.replace('_', '-').replace(' ', '-')
             try:
                 return self.__class__.types.index(interval)

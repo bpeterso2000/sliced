@@ -11,7 +11,7 @@
 from __future__ import print_function
 
 import sliced
-from ._compat import STRING_TYPES
+from ._compat import *
 from .core import slice_, slices, cut
 from .endpoint import EndPoint
 from .exceptions import OriginValueError, \

@@ -86,24 +86,24 @@ class Grammar(object):
         self.interval = {':': 'closed'}
 
     def _dialect__python_slice(self):
-        self._dialect__python_slice()
+        self._dialect__slice_list()
         self.allow_slice_list = False
 
     def _dialect__dot_notation(self):
-        self._dialect__python_slice()
+        self._dialect__slice_list()
         range_sep = Combine(Optional('.') + ':' + Optional('.'))
         self.range_sep = range_sep ^ '..'
         self.interval = {':': 'closed', '.:': 'left-open', ':.': 'right-open',
             '.:.': 'open', '..': 'open'}
 
     def _dialect__ruby_range(self):
-        self._dialect__python_slice()
+        self._dialect__slice_list()
         self.range_sep = Combine('..' + Optional('.'))
         self.allow_stepped_interval = False
         self.interval = {'..': 'closed', '...': 'right-open'}
 
     def _dialect__unix_cut(self):
-        self._dialect__python_slice()
+        self._dialect__slice_list()
         self.range_sep = '-'
         self.allow_relative_indices = False
         self.allow_stepped_interval = False

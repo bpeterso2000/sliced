@@ -74,4 +74,4 @@ def cut(seq, text):
     >>> list(cut(seq, '2-, 1'))
     [['a2', 'a3', 'a1'], ['b2', 'b3', 'b1']]
     """
-    return sliced(seq, text, 'unix_cut')
+    return slices(seq, text, 'unix_cut')
