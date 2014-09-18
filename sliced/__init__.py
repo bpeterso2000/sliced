@@ -14,7 +14,7 @@ import sliced
 from ._compat import *
 from .core import slice_, slices, cut
 from .endpoint import EndPoint
-from .exceptions import OriginValueError, \
+from .exceptions import UnknownDialect, OriginValueError, \
     EndPointValueError, EndPointZeroNotAllowed, \
     InvalidIntervalType, InvalidStepSize, InvalidSliceString
     

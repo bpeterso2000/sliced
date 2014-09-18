@@ -60,6 +60,15 @@ class Grammar(object):
         stride = 'nonzerointeger' if enabled else 'positiveinteger'
         self.stride = getattr(self.__class__, stride)
 
+    @property
+    def allow_slice_list(self):
+        return self._allow_slice_list
+
+    @allow_slice_list.setter
+    def allow_slice_list(self, enabled):
+        self._grammar_update = True
+        self._allow_slice_list = enabled
+
     @staticmethod
     def _to_int(tok):
         return int(tok[0])

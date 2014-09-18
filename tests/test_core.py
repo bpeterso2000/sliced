@@ -3,7 +3,7 @@ from string import ascii_lowercase
 
 from sliced import slice_, slices, cut
 
-class TestEndPointClass(unittest.TestCase):
+class TestCoreFunctions(unittest.TestCase):
 
     def setUp(self):
         self.seq = [[i + str(j) for j in range(9)] for i in ascii_lowercase[:2]]

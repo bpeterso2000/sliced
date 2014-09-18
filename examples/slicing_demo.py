@@ -25,9 +25,14 @@ while dialect:
             if columns:
 
                 try:
-                    for row in slices(rows, columns, dialect):
+
+                    # main workhorse function
+                    rows = slices(rows, columns, dialect)
+                    for row in rows:
                         print(row)
+
                 except InvalidSliceString as error:
                     print('InvalidSliceString: {}'.format(error))
-                except EndPointValueError as error:
+
+                except EndPointZeroNotAllowedError as error:
                     print('EndPointValueError: {}'.format(error))
