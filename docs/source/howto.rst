@@ -31,11 +31,12 @@ Examples::
     sliced_rows = list(cut(rows, '2-4, 7'))
 
 Parameters:
-===========  ==========  ===================================================
+
+===========  ==========  ==================================================
 sequence     (Sequence)  a 2-d sequence containing the objects to be sliced
 slicestring  (str)       a slice string in the specified dialect
 dialect      (str)       a dialect name defined in Grammar
-===========  ==========  ===================================================
+===========  ==========  ==================================================
 
 Intervals
 ---------

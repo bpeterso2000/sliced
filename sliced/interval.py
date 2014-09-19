@@ -12,25 +12,28 @@ class Interval(object):
     def __init__(self, start=None, stop=None, step=None,
                  type_='closed', origin=1):
         """
-        :param start: lower bound (default: None -- unbounded)
-        :param stop: upper bound (default: None -- unbounded)
-        :param step: stride (default: None -- step size 1)
-        :param origin:
-            * 0: zero-based
-            * 1: unit-based
-        :param type_:
-            * 'closed'      [start, stop]
-            * 'left-open'   (start, stop]
-            * 'right-open'  [start, stop)
-            * 'open'        (start, stop)
-            *  or if you prefer use a 2-bit binary number:
-                left-bit: if set the left-side of interval is open
-                right-bit: if set the right-side of interval is open
-        :raises:
+        Keywords:
+          start (int): lower bound, default=None (unbounded)
+          stop (int):  upper bound, default=None (unbounded)
+          step (int): stride, default=None (step-size=1)
+          origin (int):
+            0: zero-based
+            1: unit-based
+          type_:
+            'closed'      [start, stop]
+            'left-open'   (start, stop]
+            'right-open'  [start, stop)
+            'open'        (start, stop)
+            or if you prefer use a 2-bit binary number:
+              left-bit: if set the left-side of interval is open
+              right-bit: if set the right-side of interval is open
+
+        Raises:
             EndPointValueError
             OriginValueError
             InvalidIntervalType
             InvalidStepSize
+
         """
         self.type = type_
         self.origin = int(origin)

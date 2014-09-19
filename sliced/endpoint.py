@@ -4,25 +4,29 @@ from .exceptions import EndPointValueError, OriginValueError
 
 class EndPoint(object):
     """
-    An unbounded, zero-based or unit-based interval endpoint.
+    An unbounded, zero-based or unit-based interval endpoint
+    --------------------------------------------------------
 
-    * Add & subtract operator support for endpoints.  Handles unbounded
-      endpoint conditions, zero and unit-based origins and ensures that the
-      endpoint values remain sane during the operations.
-
-    * Provides relational operator support for endpoint objects
+    - Provides add & subtract operator support.
+    - Handles unbounded endpoints.
+    - Handle zero & unit-based origins.
+    - Ensures that the endpoint values remain sane during the above operations.
+    - Provides relational operator support for the endpoint objects.
 
     Attributes:
-      origin (int):  0 or 1
-      value (int):   None or integer
+      origin (int): 0 or 1
+      value (int):  None or integer
 
     Properties:
-      bound (bool):     Endpoint is set (int)
-      unbound (bool):   Endpoint not set (-oo or oo)
-      absolute (bool):  Endpoint value represents an absolute position (+n)
-      relative (bool):  Endpoint relative to the last position in sequence (-n)
+      bound (bool):    Endpoint is set to an integer
+      unbound (bool):  Endpoint not set (-oo or oo)
+      absolute (bool): Endpoint value represents an absolute position (+n)
+      relative (bool): Endpoint relative to the last position in sequence (-n)
 
-    :raises: EndPointValueError, OriginValueError
+    Raises:
+      EndPointValueError
+      OriginValueError
+
     """
 
     def __init__(self, value=None, origin=1):
@@ -131,8 +135,8 @@ class EndPoint(object):
     def relative(self):
         """
         Endpoint value is relative to the last position in the sequence:
-        * -1 represents the last position
-        * -2 represents the 2nd to last position
-        * and so on ...
+            -1 represents the last position
+            -2 represents the 2nd to last position
+            ... and so on
         """
         return not self.absolute
