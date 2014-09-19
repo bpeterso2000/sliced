@@ -1,11 +1,11 @@
 Welcome to Sliced
 =================
 
-.. image:: _static/logo.png
+.. figure:: _static/logo.png
    :scale: 50 %
    :align: left
 
-a Python slicing toolkit
+    a Python slicing toolkit
 
 .. Contents:
 
