@@ -2,7 +2,8 @@ Welcome to Sliced
 =================
 
 .. image:: _static/logo.png
-   :scale: 40 %
+   :scale: 50 %
+   :align: left
 
 a Python slicing toolkit
 

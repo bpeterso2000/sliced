@@ -5,7 +5,7 @@ Python slices are beautiful -- `well at least for developers
 <http://python-history.blogspot.com/2013/10/why-python-uses-0-based-indexing.html>`_;
 but those `zero-based <http://en.wikipedia.org/wiki/Zero-based_numbering>`_, 
 `right-open intervals <http://en.wikipedia.org/wiki/Interval_(mathematics)#Terminology>`_
-could appear rather scary if they were to be exposed to your users in the wild.
+could be scary if exposed to your users in the wild.
 
 .. image:: _static/figure1.png
 
