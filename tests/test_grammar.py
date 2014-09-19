@@ -34,14 +34,14 @@ class TestGrammarClass(unittest.TestCase):
     def test_allow_stepped_intervals(self):
         self.assertEqual(list(self.grammar.parse_text('::2')),
             [{'range_sep': ':', 'step': 2}])
-        self.grammar.allowed_stepped_intervals = False
+        self.grammar.allow_stepped_intervals = False
         with self.assertRaises(sliced.InvalidSliceString):
             self.grammar.parse_text('::2')
 
     def test_allow_reverse_strides(self):
         self.assertEqual(list(self.grammar.parse_text('::-1')),
             [{'range_sep': ':', 'step': -1}])
-        self.grammar.allowed_reverse_strides = False
+        self.grammar.allow_reverse_strides = False
         with self.assertRaises(sliced.InvalidSliceString):
             self.grammar.parse_text('::-1')
 

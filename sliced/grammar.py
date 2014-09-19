@@ -69,6 +69,15 @@ class Grammar(object):
         self._grammar_update = True
         self._allow_slice_list = enabled
 
+    @property
+    def allow_stepped_intervals(self):
+        return self._allow_stepped_intervals
+
+    @allow_stepped_intervals.setter
+    def allow_stepped_intervals(self, enabled):
+        self._grammar_update = True
+        self._allow_stepped_intervals = enabled
+
     @staticmethod
     def _to_int(tok):
         return int(tok[0])
@@ -153,7 +162,9 @@ class Grammar(object):
         stride = self.stride.setResultsName('step').setParseAction(to_int)
         short_slice = lower_bound + range_sep + upper_bound
         long_slice = short_slice + self.step_sep + Optional(stride)
-        return lower_bound ^ short_slice ^ long_slice
+        if self.allow_stepped_intervals:
+            return lower_bound ^ short_slice ^ long_slice
+        return lower_bound ^ short_slice
 
     def _build_grammar(self):
         self.validate_separators()

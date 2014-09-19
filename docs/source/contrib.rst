@@ -1,5 +1,5 @@
-Guiding principles
-==================
+Guidelines for contributors
+===========================
 
 Ensure portability
 ------------------

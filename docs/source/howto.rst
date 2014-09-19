@@ -1,5 +1,5 @@
-How-to
-======
+Sliced how-to
+=============
 
 .. sidebar:: Visualizing 2-d Sequences
 

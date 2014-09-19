@@ -1,7 +1,6 @@
 Slicing for users
 =================
 
-
 Python slices are beautiful -- `well at least for developers
 <http://python-history.blogspot.com/2013/10/why-python-uses-0-based-indexing.html>`_;
 but those `zero-based <http://en.wikipedia.org/wiki/Zero-based_numbering>`_, 

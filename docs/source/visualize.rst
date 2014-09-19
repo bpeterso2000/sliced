@@ -1,6 +1,8 @@
 Visualizing slices
 ==================
 
+`This section provides diagrams to help visualize how Python slices work.`
+
 Python slices are `right-open intervals
 <http://en.wikipedia.org/wiki/Interval_(mathematics)#Terminology>`_ consisting
 of `zero-based <http://en.wikipedia.org/wiki/Zero-based_numbering>`_ endpoints:
