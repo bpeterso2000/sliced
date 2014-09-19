@@ -52,6 +52,50 @@ class TestGrammarClass(unittest.TestCase):
         with self.assertRaises(sliced.InvalidSliceString):
             self.grammar.parse_text('1, 2')
 
+    def test_slice_list_dialect(self):
+        self.grammar.dialect = 'slice_list'
+        self.assertEqual(list(self.grammar.parse_text('1, 2:5:2, -2')), [
+                         {'start': 1},
+                         {'start': 2, 'range_sep': ':', 'stop': 5, 'step': 2},
+                         {'start': -2}])
+        with self.assertRaises(sliced.InvalidSliceString):
+            self.grammar.parse_text('1-2')
+
+    def test_python_slice_dialect(self):
+        self.grammar.dialect = 'python_slice'
+        self.assertEqual(list(self.grammar.parse_text('2:5:2')), [
+                         {'start': 2, 'range_sep': ':', 'stop': 5, 'step': 2}])
+        with self.assertRaises(sliced.InvalidSliceString):
+            self.grammar.parse_text('1, 2:5:2, -2')
+
+    def test_dot_notation_dialect(self):
+        self.grammar.dialect = 'dot_notation'
+        self.assertEqual(list(self.grammar.parse_text('1, 2:5:2')), [
+                         {'start': 1}, {'start': 2, 'range_sep': ':',
+                          'stop': 5, 'step': 2}])
+        self.assertEqual(list(self.grammar.parse_text('1, 2.:5:2')), [
+                         {'start': 1}, {'start': 2, 'range_sep': '.:',
+                          'stop': 5, 'step': 2}])
+        self.assertEqual(list(self.grammar.parse_text('1, 2.:.5:2')), [
+                         {'start': 1}, {'start': 2, 'range_sep': '.:.',
+                          'stop': 5, 'step': 2}])
+        self.assertEqual(list(self.grammar.parse_text('1, 2:.5:2')), [
+                         {'start': 1}, {'start': 2, 'range_sep': ':.',
+                          'stop': 5, 'step': 2}])
+        self.assertEqual(list(self.grammar.parse_text('1, 2..5:2')), [
+                         {'start': 1}, {'start': 2, 'range_sep': '..',
+                          'stop': 5, 'step': 2}])
+        with self.assertRaises(sliced.InvalidSliceString):
+            self.grammar.parse_text('1, 2...5:2, -2')
+
+    def test_unix_cut(self):
+        self.grammar.dialect = 'unix_cut'
+        self.assertEqual(list(self.grammar.parse_text('2-5, 8')), [
+                         {'start': 2, 'range_sep': '-', 'stop': 5},
+                         {'start': 8}])
+        with self.assertRaises(sliced.InvalidSliceString):
+            self.grammar.parse_text('1:2')
+
 
 if __name__ == '__main__':
     unittest.main()
