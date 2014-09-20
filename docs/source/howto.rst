@@ -27,7 +27,7 @@ Examples::
     sliced_row_gen = cut(rows, '2-4, 7')
     sliced_rows = list(cut(rows, '2-4, 7'))
 
-.. py:funct:: slices(seq, text, dialect=None)
+.. py:function:: slices(seq, text, dialect=None)
 
     extract columns from rows using one or more slice strings
      
