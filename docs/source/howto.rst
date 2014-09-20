@@ -1,39 +1,91 @@
-Sliced how-to
-=============
+How-to use Sliced
+=================
 
 Sliced comes packaged with three (3) high-level helper functions used to slice
 objects from a sequence of sequences. These helpers are wrappers around the
-Grammar & Interval classes and each returns a generator to effeciently produce
-a list of sliced columns for each row.
+Grammar & Interval classes.  Each returns a generator to effeciently produce
+a list of sliced columns per each row.
 
 
 Helper functions
 ----------------
 
-============  ===============================================================
-**`slices`**  slice a sequence using specified dialect (supports slice lists)
-**`slice_`**  same as slices (faster, but doesn't support slice lists)
-**`cut`**     same a slices, but dialect is hard-coded to 'unix_cut'
-============  ===============================================================
+:funct:`slices`  slice a sequence using specified dialect (supports slice lists)
+:funct:`slice_`  same as slices (faster, but doesn't support slice lists)
+:funct:`cut`     same a slices, but dialect is hard-coded to 'unix_cut'
 
 Examples::
 
     from sliced import slices, slice_, cut
 
     sliced_row_gen = slices(rows, '1, 3, 4:8, -1')
-    sliced_row_gen = slices(rows, '1..10, 14::2', 'dot_notation')
-    sliced_row_gen = slice_(rows, ':8')
+    sliced_row_gen = slices(rows, '1..3, 5::2', 'dot_notation')
+    sliced_row_gen = slice_(rows, ':5')
     sliced_row_gen = slice_(rows, '2-4, 7', 'unix-cut')
     sliced_row_gen = cut(rows, '2-4, 7')
     sliced_rows = list(cut(rows, '2-4, 7'))
 
-Parameters:
+.. funct:: slices(seq, text, dialect=None)
 
-===========  ==========  ==================================================
-sequence     (Sequence)  a 2-d sequence containing the objects to be sliced
-slicestring  (str)       a slice string in the specified dialect
-dialect      (str)       a dialect name defined in Grammar
-===========  ==========  ==================================================
+    extract columns from rows using one or more slice strings
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    :param Sequence seq: A 2-d Sequence to slice (i.e. rows & columns)
+    :param str text:     Slice string specified in the selected dialect.
+    :param str dialect:  Dialect name; used to build grammar and parse text.
+                         The name must be defined in the Grammar class.
+    :type dialect:       None or str
+    :returns:            Produces a list of sliced objects per item in the seq.
+    :rtype: generator
+
+    >>> seq = [['a1', 'a2', 'a3'], ['b1', 'b2', 'b3']]
+    >>> list(sliced(seq, '2:, 1'))
+    [['a2', 'a3', 'a1'], ['b2', 'b3', 'b1']]
+    
+    >>> list(sliced(seq, '1.:.3', 'dot_notation'))
+    [['a2'], ['b2']]
+    
+    >>> list(sliced(seq, '1.:3', 'dot_notation'))
+    [['a2', 'a3'], ['b2', 'b3']]
+    
+    >>> list(sliced(seq, '1..3', 'ruby_range'))
+    [['a1', 'a2', 'a3'], ['b1', 'b2', 'b3']]
+
+    >>> list(sliced(seq, '1...3', 'ruby_range'))
+    [['a1', 'a2'], ['b1', 'b2']]
+
+
+.. funct:: slice_(seq, text, dialect=None)
+
+    extract columns from rows using a single slice
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    Similar to the sliced function, but faster; slice lists are not allowed.
+
+    :param Sequence seq: A 2-d Sequence to slice (i.e. rows & columns)
+    :param str text:     Slice string specified in the selected dialect.
+    :param str dialect:  Dialect name; used to build grammar and parse text.
+                         The name must be defined in the Grammar class.
+    :type dialect:       None or str
+    :returns:            Produces a list of sliced objects per item in the seq.
+    :rtype: generator
+
+    >>> seq = [['a1', 'a2', 'a3'], ['b1', 'b2', 'b3']]
+    >>> list(sliced(seq, '2:'))
+    [['a2', 'a3'], ['b2', 'b3']]
+
+
+.. funct:: cut(seq, text)
+
+    extract columns from rows using Unix cut-style syntax
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    :param Sequence seq: 2-d Sequence to slice (i.e. rows & columns)
+    :param str text:     Slice string specified in the selected dialect.
+    :returns:            Produces a list of sliced objects per item in the seq.
+    :rtype:              generator
+
+    >>> seq = [['a1', 'a2', 'a3'], ['b1', 'b2', 'b3']]
+    >>> list(cut(seq, '2-, 1'))
+    [['a2', 'a3', 'a1'], ['b2', 'b3', 'b1']]
+
 
 Intervals
 ---------

@@ -11,13 +11,16 @@ def slice_(seq, text, dialect=None):
     extract columns from rows using a single slice
     ----------------------------------------------
     Similar to the sliced function, but faster; slice lists are not allowed.
-    :param Sequence seq: A 2-d Sequence to slice (i.e. rows & columns)
-    :param str text: Slice string specified in the selected dialect.
-    :param dialect: Slice string dialect name; used to build grammar. The
-        dialect must be None or a dialect defined in the Grammar class.
-    :type dialect: str or None
-    :returns: A list of sliced objects for each each item in the sequence.
-    :rtype: generator
+
+    :param Sequence seq: 2-d Sequence to slice (i.e. rows & columns)
+    :param str text:     Slice string specified in the selected dialect.
+    :param dialect:      Slice string dialect name; used to build grammar. The
+                         dialect must be None or a dialect defined in the
+                         Grammar class.
+    :type dialect:       str or None
+    :returns:            A list of sliced objects for each each item in the
+                         sequence.
+    :rtype:              generator
 
     >>> seq = [['a1', 'a2', 'a3'], ['b1', 'b2', 'b3']]
     >>> list(sliced(seq, '2:'))
@@ -33,13 +36,13 @@ def slices(seq, text, dialect=None):
     """
     extract columns from rows using one or more slice strings
     ---------------------------------------------------------
-    :param seq: (Sequence) - A 2-d Sequence to slice (i.e. rows & columns)
-    :param text: (str) - Slice string specified in the selected dialect.
-    :param dialect: (str) - Slice string dialect name; used to build grammar.
-                            The dialect must be None (default) or a dialect
-                            as described in the Grammar class.
-    :returns: (generator) - produces a list of sliced objects for each 
-                            each item in the sequence.
+    :param Sequence seq: 2-d Sequence to slice (i.e. rows & columns)
+    :param str text:     Slice string specified in the selected dialect.
+    :param str dialect:  Dialect name; used to build grammar and parse text.
+                         The name must be defined in the Grammar class.
+    :type dialect:       None or str
+    :returns:            Produces a list of sliced objects per item in the seq.
+    :rtype:              generator
 
     >>> seq = [['a1', 'a2', 'a3'], ['b1', 'b2', 'b3']]
     >>> list(sliced(seq, '2:, 1'))
