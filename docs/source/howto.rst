@@ -1,11 +1,6 @@
 Sliced how-to
 =============
 
-.. sidebar:: Visualizing 2-d Sequences
-
-    A 2-d sequence can be though of as a spreadsheet, where the outer sequence
-    is rows, the inner sequence is columns and the objects are cells.
-
 Sliced comes packaged with three (3) high-level helper functions used to slice
 objects from a sequence of sequences. These helpers are wrappers around the
 Grammar & Interval classes and each returns a generator to effeciently produce
@@ -22,6 +17,8 @@ Helper functions
 ============  ===============================================================
 
 Examples::
+
+    from sliced import slices, slice_, cut
 
     sliced_row_gen = slices(rows, '1, 3, 4:8, -1')
     sliced_row_gen = slices(rows, '1..10, 14::2', 'dot_notation')
