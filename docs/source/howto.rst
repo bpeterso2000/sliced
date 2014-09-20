@@ -12,9 +12,9 @@ Helper functions
 
 :py:func:`slices`  slices a sequence using specified dialect (supports slice lists)
 
-:py:funct:`slice_`  same as slices (faster, but doesn't support slice lists)
+:py:func:`slice_`  same as slices (faster, but doesn't support slice lists)
 
-:py:funct:`cut`     same a slices, but dialect is hard-coded to 'unix_cut'
+:py:func:`cut`     same a slices, but dialect is hard-coded to 'unix_cut'
 
 Examples::
 
@@ -30,7 +30,7 @@ Examples::
 .. py:funct:: slices(seq, text, dialect=None)
 
     extract columns from rows using one or more slice strings
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     
     :param Sequence seq: A 2-d Sequence to slice (i.e. rows & columns)
     :param str text:     Slice string specified in the selected dialect.
     :param str dialect:  Dialect name; used to build grammar and parse text.
@@ -56,10 +56,10 @@ Examples::
     [['a1', 'a2'], ['b1', 'b2']]
 
 
-.. py:funct:: slice_(seq, text, dialect=None)
+.. py:function:: slice_(seq, text, dialect=None)
 
     extract columns from rows using a single slice
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
     Similar to the sliced function, but faster; slice lists are not allowed.
 
     :param Sequence seq: A 2-d Sequence to slice (i.e. rows & columns)
@@ -75,10 +75,10 @@ Examples::
     [['a2', 'a3'], ['b2', 'b3']]
 
 
-.. py:funct:: cut(seq, text)
+.. py:function:: cut(seq, text)
 
     extract columns from rows using Unix cut-style syntax
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
     :param Sequence seq: 2-d Sequence to slice (i.e. rows & columns)
     :param str text:     Slice string specified in the selected dialect.
     :returns:            Produces a list of sliced objects per item in the seq.
