@@ -1,4 +1,4 @@
-How-to use Sliced
+How-to use sliced
 =================
 
 Sliced comes packaged with three (3) high-level helper functions used to slice
@@ -10,9 +10,9 @@ a list of sliced columns per each row.
 Helper functions
 ----------------
 
-:funct:`slices`  slice a sequence using specified dialect (supports slice lists)
-:funct:`slice_`  same as slices (faster, but doesn't support slice lists)
-:funct:`cut`     same a slices, but dialect is hard-coded to 'unix_cut'
+:py:func:`slices`  slice a sequence using specified dialect (supports slice lists)
+:py:funct:`slice_`  same as slices (faster, but doesn't support slice lists)
+:py:funct:`cut`     same a slices, but dialect is hard-coded to 'unix_cut'
 
 Examples::
 
