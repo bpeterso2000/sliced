@@ -10,8 +10,10 @@ a list of sliced columns per each row.
 Helper functions
 ----------------
 
-:py:func:`slices`  slice a sequence using specified dialect (supports slice lists)
+:py:func:`slices`  slices a sequence using specified dialect (supports slice lists)
+
 :py:funct:`slice_`  same as slices (faster, but doesn't support slice lists)
+
 :py:funct:`cut`     same a slices, but dialect is hard-coded to 'unix_cut'
 
 Examples::
@@ -25,7 +27,7 @@ Examples::
     sliced_row_gen = cut(rows, '2-4, 7')
     sliced_rows = list(cut(rows, '2-4, 7'))
 
-.. funct:: slices(seq, text, dialect=None)
+.. py:funct:: slices(seq, text, dialect=None)
 
     extract columns from rows using one or more slice strings
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -54,7 +56,7 @@ Examples::
     [['a1', 'a2'], ['b1', 'b2']]
 
 
-.. funct:: slice_(seq, text, dialect=None)
+.. py:funct:: slice_(seq, text, dialect=None)
 
     extract columns from rows using a single slice
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -73,7 +75,7 @@ Examples::
     [['a2', 'a3'], ['b2', 'b3']]
 
 
-.. funct:: cut(seq, text)
+.. py:funct:: cut(seq, text)
 
     extract columns from rows using Unix cut-style syntax
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
