@@ -1,5 +1,5 @@
 import unittest
-
+import pyparsing
 import sliced
 
 class TestGrammarClass(unittest.TestCase):
@@ -95,6 +95,49 @@ class TestGrammarClass(unittest.TestCase):
                          {'start': 8}])
         with self.assertRaises(sliced.InvalidSliceString):
             self.grammar.parse_text('1:2')
+
+    def test_to_int(self):
+        self.assertEqual(self.grammar._to_int(['2']), 2)
+
+    def test_get_dialects(self):
+        self.assertEqual(set(self.grammar.get_dialects()), {'slice_list',
+            'python_slice', 'dot_notation', 'double_dot', 'unix_cut'})
+
+    def test_list_dialects(self):
+        self.assertIn('slice_list', self.grammar.list_dialects())
+        self.assertIn('python_slice', self.grammar.list_dialects())
+        self.assertIn('dot_notation', self.grammar.list_dialects())
+        self.assertIn('double_dot', self.grammar.list_dialects())
+        self.assertIn('unix_cut', self.grammar.list_dialects())
+
+
+    def test_validate_separators(self):
+        self.assertTrue(self.grammar.validate_separators())
+        self.grammar.range_sep = 'a'
+        with self.assertRaises(sliced.InvalidSeparator):
+            self.grammar.validate_separators()
+        self.grammar.range_sep = ':'
+        self.assertTrue(self.grammar.validate_separators())
+        self.grammar.step_sep = 'a'
+        with self.assertRaises(sliced.InvalidSeparator):
+            self.grammar.validate_separators()
+        self.grammar.step_sep = ':'
+        self.assertTrue(self.grammar.validate_separators())
+        self.grammar.list_sep = 'a'
+        with self.assertRaises(sliced.InvalidSeparator):
+            self.grammar.validate_separators()
+
+    def test_get_slice_item(self):
+        grammar = self.grammar._get_slice_item() + pyparsing.stringEnd
+        self.assertEqual(grammar.parseString('2').asList(), ['2'])
+        self.assertEqual(grammar.parseString('2:3').asList(), ['2:3'])
+        self.assertEqual(grammar.parseString('2:3:4').asList(), ['2:3:4'])
+        self.grammar.allow_stepped_intervals = False
+        grammar = self.grammar._get_slice_item() + pyparsing.stringEnd
+        self.assertEqual(grammar.parseString('2').asList(), ['2'])
+        self.assertEqual(grammar.parseString('2:3').asList(), ['2:3'])
+        with self.assertRaises(pyparsing.ParseException):
+            grammar.parseString('2:3:4')
 
 
 if __name__ == '__main__':

@@ -51,7 +51,6 @@ class Grammar(object):
 
     @property
     def allow_reverse_strides(self):
-        self._grammar_update = True
         return self.stride == self.__class__.nonzerointeger
 
     @allow_reverse_strides.setter
@@ -87,11 +86,9 @@ class Grammar(object):
         prefix_length = len(prefix)
         return [i[prefix_length:] for i in dir(self) if i.startswith(prefix)]
 
-    def list_dialects(self):
-        indent = ' ' * 4
-        print('Dialects:')
-        for dialect in self.get_dialects():
-            print(indent + dialect)
+    def list_dialects(self, indent='    '):
+        return 'Dialects:\n' + ('\n'.join([indent + dialect
+                                for dialect in self.get_dialects()]))
 
     def _dialect__slice_list(self):
         self.list_sep = ','
@@ -114,7 +111,7 @@ class Grammar(object):
         self.interval = {':': 'closed', '.:': 'left-open', ':.': 'right-open',
             '.:.': 'open', '..': 'open'}
 
-    def _dialect__ruby_range(self):
+    def _dialect__double_dot(self):
         self._dialect__slice_list()
         self.range_sep = Combine('..' + Optional('.'))
         self.allow_stepped_interval = False
@@ -144,7 +141,7 @@ class Grammar(object):
         index = endpoint = self.endpoint
         short_slice = Optional(endpoint) + self.range_sep + Optional(endpoint)
         if not self.allow_stepped_intervals:
-            return index ^ short_slice
+            return Combine(index ^ short_slice)
         long_slice = short_slice + self.step_sep + Optional(self.stride)
         return Combine(index ^ short_slice ^ long_slice)
 
@@ -162,15 +159,16 @@ class Grammar(object):
         stride = self.stride.setResultsName('step').setParseAction(to_int)
         short_slice = lower_bound + range_sep + upper_bound
         long_slice = short_slice + self.step_sep + Optional(stride)
+        index = lower_bound
         if self.allow_stepped_intervals:
-            return lower_bound ^ short_slice ^ long_slice
-        return lower_bound ^ short_slice
+            return index ^ short_slice ^ long_slice
+        return index ^ short_slice
 
     def _build_grammar(self):
         self.validate_separators()
         self._slice_grammar = self._build_slice_grammar() + pp.stringEnd
         self._text_grammar = (self._get_slice_list() if self.allow_slice_list
-                             else self._get_slice_item()) + pp.stringEnd
+                              else self._get_slice_item()) + pp.stringEnd
 
     def _syntax_error_pointer(self, text, error):
         pointer = error.column
@@ -180,7 +178,7 @@ class Grammar(object):
         if len(text) > 60:
             text = text[:60]
         line1 = text
-        line2 = ' ' * (pointer + len('InvalidSliceString: ') - 1) + '^'
+        line2 = ' ' * (pointer + len(error.msg) - 1) + '^'
         line3 = '{} at column {}.'.format(error.msg, error.column)
         return '\n'.join([line1, line2, line3])
 

@@ -14,7 +14,7 @@ rows = [
 
 dialect = True
 while dialect:
-    Grammar().list_dialects()
+    print(Grammar().list_dialects())
     dialect = input('\nEnter dialect? ')
     if dialect and dialect in Grammar().get_dialects():
 

@@ -15,9 +15,9 @@ from ._compat import *
 from .core import slice_, slices, cut
 from .endpoint import EndPoint
 from .exceptions import UnknownDialect, OriginValueError, \
-    EndPointValueError, EndPointZeroNotAllowed, \
+    EndPointValueError, ZeroEndPointNotAllowed, InvalidSeparator, \
     InvalidIntervalType, InvalidStepSize, InvalidSliceString
-    
+
 from .grammar import Grammar
 from .interval import Interval
 
@@ -25,8 +25,9 @@ from .interval import Interval
 __all__ = [
     'slices', 'slice_', 'cut',
     'EndPoint', 'Interval', 'Grammar',
-    'EndPointValueError', 'EndPointZeroNotAllowed', 'OriginValueError',
+    'EndPointValueError', 'ZeroEndPointNotAllowed', 'OriginValueError',
     'InvalidIntervalType', 'InvalidStepSize', 'InvalidSliceString',
+    'InvalidSeparator', 'UnknownDialect'
 ]
 
 

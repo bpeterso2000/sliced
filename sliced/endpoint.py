@@ -113,7 +113,7 @@ class EndPoint(object):
             try:
                 number = int(value_)
                 if number >= 0 and number < self.origin:
-                    raise EndPointZeroNotAllowed('Outside unit-based origin.')
+                    raise ZeroEndPointNotAllowed('Outside unit-based origin.')
                 self._value = number
             except (ValueError, TypeError) as error:
                 raise EndPointValueError(error)
