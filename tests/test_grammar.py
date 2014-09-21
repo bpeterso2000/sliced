@@ -139,6 +139,17 @@ class TestGrammarClass(unittest.TestCase):
         with self.assertRaises(pyparsing.ParseException):
             grammar.parseString('2:3:4')
 
+    def test_get_slice_list(self):
+       grammar = self.grammar._get_slice_list() + pyparsing.stringEnd
+       self.assertEqual(grammar.parseString('2, 3').asList(), ['2', '3'])
+       self.assertEqual(grammar.parseString('2,3,').asList(), ['2', '3'])
+       self.assertEqual(grammar.parseString('2:3:4').asList(), ['2:3:4'])
+       self.assertEqual(grammar.parseString('2, 2:3:4, 6').asList(),
+                        ['2', '2:3:4', '6'])
+
+
+
+
 
 if __name__ == '__main__':
     unittest.main()

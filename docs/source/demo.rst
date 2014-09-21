@@ -1,5 +1,5 @@
-Slicing demonstration
-=====================
+a Slicing demonstration
+=======================
 
 This example is from 'slicing_demo.py` which is included in the `sliced` package::
 
