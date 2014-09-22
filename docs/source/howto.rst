@@ -10,11 +10,11 @@ a list of sliced columns per each row.
 Helper functions
 ----------------
 
-:py:func:`slices`  slices a sequence using specified dialect (supports slice lists)
+:py:func:`slices`  slices a sequence using a specified dialect
 
-:py:func:`slice_`  same as slices (faster, but doesn't support slice lists)
+:py:func:`slice_`  faster than slices whenever slice list support is not needed
 
-:py:func:`cut`     same a slices, but dialect is hard-coded to 'unix_cut'
+:py:func:`cut`     same a slices, but the dialect is hard-coded to 'unix_cut'
 
 Examples::
 
@@ -36,7 +36,7 @@ Examples::
     :param str dialect:  Dialect name; used to build grammar and parse text.
                          The name must be defined in the Grammar class.
     :type dialect:       None or str
-    :returns:            Produces a list of sliced objects per item in the seq.
+    :returns:            Produces a list of sliced objects per `seq` item.
     :rtype: generator
 
     >>> seq = [['a1', 'a2', 'a3'], ['b1', 'b2', 'b3']]
@@ -67,7 +67,7 @@ Examples::
     :param str dialect:  Dialect name; used to build grammar and parse text.
                          The name must be defined in the Grammar class.
     :type dialect:       None or str
-    :returns:            Produces a list of sliced objects per item in the seq.
+    :returns:            Produces a list of sliced objects per `seq` item.
     :rtype: generator
 
     >>> seq = [['a1', 'a2', 'a3'], ['b1', 'b2', 'b3']]
@@ -81,7 +81,7 @@ Examples::
 
     :param Sequence seq: 2-d Sequence to slice (i.e. rows & columns)
     :param str text:     Slice string specified in the selected dialect.
-    :returns:            Produces a list of sliced objects per item in the seq.
+    :returns:            Produces a list of sliced objects per `seq` item.
     :rtype:              generator
 
     >>> seq = [['a1', 'a2', 'a3'], ['b1', 'b2', 'b3']]
@@ -148,63 +148,3 @@ Parsing exceptions
 
     under construction
 
-
-slices
-^^^^^^
-
-.. code-block:: python
-
-    In [1]: from pprint import pprint
-
-    In [2]: from sliced import slices
-
-    In [3]: sequence = [
-       ...:     ['alpha-1', 'alpha-2', 'alpha-3', 'alpha-4', 'alpha-5', 'alpha-6'],
-       ...:     ['beta-1', 'beta-2', 'beta-3', 'beta-4', 'beta-5', 'beta-6'],
-       ...:     ['gamma-1', 'gamma-2', 'gamma-3', 'gamma-4', 'gamma-5', 'gamma-6']
-       ...: ]
-
-    In [4]: slicestring = '2:4, -1'
-
-    In [5]: dialect = 'python_slice'
-
-    In [6]:
-
-    In [6]: new_slices = slices(sequence, slicestring, dialect)
-
-    In [7]: type(new_slices)
-    Out[7]: generator
-
-    In [8]: pprint(list(new_slices))
-    [['alpha-2', 'alpha-3', 'alpha-4', 'alpha-6'],
-     ['beta-2', 'beta-3', 'beta-4', 'beta-6'],
-     ['gamma-2', 'gamma-3', 'gamma-4', 'gamma-6']]
-
-In the above example we used the 'python_slice' format.  This is the default
-format: dialect='python_slice', dialect=None or not including dialect as a
-parameter will all have the same effect.  The `python_slice` dialect behaves
-just like a standard Python slice syntax except that:
-
-- Indices are unit-based (origin=1) instead of zero-based.
-- Slices are closed-intervals instead of a right-open.
-- Supports slice lists (comma separated)
-
-slice_()
---------
-Same as `slices()` except that it only handles a single slice.  Even if the
-selected dialect supports slice lists, the grammar will be rebuilt to disallow
-the slice list syntax.  The advantage of this function over `slices()` is that
-it is lightweight and faster since there is only one sliced list, it doesn't
-need to chain the resulting sliced lists back together.
-
-.. code-block:: python
-
-    new_slice = slice_(sequence, slicestring, dialect)
-
-cut()
------
-Shortcut for code: slices(sequence, slicestring, dialect='unix-cut')
-
-.. code-block:: python
-
-    new_slice = cut(sequence, slicestring)
