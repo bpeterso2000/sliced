@@ -6,10 +6,11 @@ Converts header names to indices.
 """
 
 import re
+from collections import Counter
 
 from pyparsing import Regex
 
-from exceptions import InvalidSliceString
+from .exceptions import InvalidSliceString, DuplicateItemsNotAllowed
 
 
 class Headers(object):
@@ -23,26 +24,50 @@ class Headers(object):
         """
         :param headers (Sequence or dict): can be a sequence of header names
             or a dictionary of index:name.
-
         """
-        if not isinstance(headers, dict):
-            headers = dict((j, i) for i, j in enumerate(headers))
-        self.headers = self.orig_headers = headers
+        self.headers = headers
         self.ignore_case = ignore_case
 
-    def lowercase_headers(self):
-        return dict((k, v.lower()) for k, v in self.headers)
+    @property
+    def headers(self):
+        return getattr(self, '_headers', {})
+
+    @headers.setter
+    def headers(self, headers):
+        if not isinstance(headers, dict):
+            header_test = header_dict = {j: i for i, j in enumerate(headers)}
+            if self.ignore_case:
+                header_test = self.lowercase_keys(header_dict)
+            self.validate_headers(headers, header_test)
+            self._headers = header_dict
+
+    @property
+    def ignore_case(self):
+        return getattr(self, '_ignore_case', False)
+
+    @ignore_case.setter
+    def ignore_case(self, enabled):
+        if enabled:
+            lowercase_headers = self.lowercase_keys(self.headers)
+            self.validate_headers(self.headers, lowercase_headers)
+        self._ignore_case = enabled
+
+    @staticmethod
+    def lowercase_keys(dict_):
+        return {k.lower(): v for k, v in dict_}
 
     def lowercase_name(self, name):
         return name[0].lower() if self.ignore_case else name[0]
 
-    def validate_headers(self):
-        # check for duplicate headers
-        pass
+    def validate_headers(self, headers, new_dict):
+        if len(headers) != len(new_dict):
+            dups = [k for k, v in Counter(new_dict).items() if v]
+            mesg = 'Duplicate headers.'
+            raise DuplicateItemsNotAllowed({'mesg': mesg, 'dups': dups})
 
     def names_to_indices(self, text):
         """uses back quotes to distinguish header names from regular quotes"""
-        headers = (self.lowercase_headers() if self.ignore_case
+        headers = (self.lowercase_keys(self.headers) if self.ignore_case
                    else self.headers)
         headers = {i.replace(' ', '_'): j for i, j in headers.items()}
         tokens = self.__class__.column_names.scanString(text)
@@ -53,18 +78,10 @@ class Headers(object):
             header = name.lower() if self.ignore_case else name
             header = header.replace(' ', '_')
             if header not in headers:
-                msg = 'Unknown column name {!r}.'.format(name)
-                raise InvalidSliceString(dict(msg=msg, column=start))
+                mesg = 'Unknown column name {!r}.'.format(name)
+                raise InvalidSliceString(mesg, {'column': start})
             if start - last_stop > 0:
                 result += text[last_stop:start]
             last_stop = stop
             result += str(headers[header])
         return result
-
-
-headers = ['col 1', 'col 2', 'c', 'd', 'col 5']
-text = '`col 2`:`col 5`:2, c, `col 1`'
-print(headers)
-print(text)
-h = Headers(headers)
-print(h.names_to_indices(text))

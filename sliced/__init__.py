@@ -11,8 +11,9 @@ import sliced
 from ._compat import *
 from .core import slice_, slices, cut
 from .endpoint import EndPoint
-from .exceptions import OptionNotFound, InvalidSliceString
-
+from .exceptions import OptionNotFound, InvalidSliceString, \
+    DuplicateItemsNotAllowed
+from .headers import Headers
 from .grammar import Grammar
 from .interval import Interval
 
