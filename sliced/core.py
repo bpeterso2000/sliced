@@ -47,13 +47,13 @@ def slices(seq, text, dialect=None):
     >>> seq = [['a1', 'a2', 'a3'], ['b1', 'b2', 'b3']]
     >>> list(sliced(seq, '2:, 1'))
     [['a2', 'a3', 'a1'], ['b2', 'b3', 'b1']]
-    
+
     >>> list(sliced(seq, '1.:.3', 'dot_notation'))
     [['a2'], ['b2']]
-    
+
     >>> list(sliced(seq, '1.:3', 'dot_notation'))
     [['a2', 'a3'], ['b2', 'b3']]
-    
+
     >>> list(sliced(seq, '1..3', 'ruby_range'))
     [['a1', 'a2', 'a3'], ['b1', 'b2', 'b3']]
 
@@ -68,10 +68,10 @@ def cut(seq, text):
     """
     extract columns from rows using Unix cut-style syntax
     -----------------------------------------------------
-    :param seq: (Sequence) - A 2-d Sequence to slice (i.e. rows & columns)
-    :param text: (str) - Slice string specified in Unix-cut syntax
-    :returns: (generator) - produces a list of sliced objects for each 
-                            each item in the sequence.
+    :param Sequence seq: 2-d Sequence to slice (i.e. rows & columns)
+    :param str text:     Slice string specified in the selected dialect.
+    :returns:            Produces a list of sliced objects per item in the seq.
+    :rtype:              generator
 
     >>> seq = [['a1', 'a2', 'a3'], ['b1', 'b2', 'b3']]
     >>> list(cut(seq, '2-, 1'))

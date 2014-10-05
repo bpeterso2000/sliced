@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 import pyparsing as pp
-from pyparsing import Combine, Literal, Optional, ZeroOrMore, Regex, \
-    Suppress, ParseException
+from pyparsing import Literal, Optional, ZeroOrMore, Regex, \
+    Combine, Suppress, ParseException
 
-from .exceptions import InvalidSeparator, InvalidSliceString, UnknownDialect
+from .exceptions import InvalidSliceString, OptionNotFound
+
 
 class Grammar(object):
 
@@ -37,7 +38,9 @@ class Grammar(object):
             self._grammar_update = True
         except AttributeError:
             self._dialect = None
-            raise UnknownDialect(name, self.get_dialects())
+            error = dict(mesg='Unknown dialect', selected_option=name,
+                         available_options=self.get_dialects())
+            raise OptionNotFound(error)
 
     @property
     def allow_relative_indices(self):
@@ -109,7 +112,7 @@ class Grammar(object):
         range_sep = Combine(Optional('.') + ':' + Optional('.'))
         self.range_sep = range_sep ^ '..'
         self.interval = {':': 'closed', '.:': 'left-open', ':.': 'right-open',
-            '.:.': 'open', '..': 'open'}
+                         '.:.': 'open', '..': 'open'}
 
     def _dialect__double_dot(self):
         self._dialect__slice_list()
@@ -124,6 +127,10 @@ class Grammar(object):
         self.allow_stepped_interval = False
 
     def validate_separators(self):
+        """
+        Sepaarators can not be alphanumeric when headers are enabled, because
+        of potential ambiguity.
+        """
         for type_ in ['range', 'step', 'list']:
             try:
                 sep = getattr(self, type_ + '_sep')
@@ -132,10 +139,9 @@ class Grammar(object):
                     setattr(self, type_ + '_sep', Literal(sep))
             except ParseException:
                 mesg = ('{} separator can\'t contain alphanumeric or '
-                        'underscore characters.')
-                raise InvalidSeparator(mesg.format(sep.title()))
+                        'underscore characters when headers are enabled.')
+                raise ValueError(mesg.format(sep.title()))
         return True
-
 
     def _get_slice_item(self):
         index = endpoint = self.endpoint
@@ -170,18 +176,6 @@ class Grammar(object):
         self._text_grammar = (self._get_slice_list() if self.allow_slice_list
                               else self._get_slice_item()) + pp.stringEnd
 
-    def _syntax_error_pointer(self, text, error):
-        pointer = error.column
-        if pointer > 40:
-            text = text[pointer - 20::min(len(text), pointer + 20)]
-            pointer -= (pointer - 20)
-        if len(text) > 60:
-            text = text[:60]
-        line1 = text
-        line2 = ' ' * (pointer + len(error.msg) - 1) + '^'
-        line3 = '{} at column {}.'.format(error.msg, error.column)
-        return '\n'.join([line1, line2, line3])
-
     def parse_text(self, text):
         if self._grammar_update:
             self._build_grammar()
@@ -189,7 +183,7 @@ class Grammar(object):
         try:
             slices = self._text_grammar.parseString(text)
         except ParseException as error:
-            raise InvalidSliceString(self._syntax_error_pointer(text, error))
+            raise InvalidSliceString(error)
         return (dict(self._slice_grammar.parseString(i)) for i in slices)
 
     def parse(self, text):

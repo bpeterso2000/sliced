@@ -1,7 +1,4 @@
 # -*- coding: utf-8 -*-
-from .exceptions import EndPointValueError, OriginValueError
-
-
 class EndPoint(object):
     """
     An unbounded, zero-based or unit-based interval endpoint
@@ -94,12 +91,15 @@ class EndPoint(object):
 
     @origin.setter
     def origin(self, value):
+        """
+        :raises ValueError: must a number set to either 0 or 1
+        """
         try:
             self._origin = int(value)
             if self._origin not in [0, 1]:
                 raise ValueError()
         except (ValueError, TypeError):
-                raise OriginValueError('Origin must be 0 or 1.')
+                raise ValueError('Origin must be 0 or 1.')
 
     @property
     def value(self):
@@ -107,16 +107,17 @@ class EndPoint(object):
 
     @value.setter
     def value(self, value_):
+        """
+        :raises ValueError: must be a number and != 0 when origin == 1
+        """
         if value_ is None:
             self._value = None
         else:
-            try:
-                number = int(value_)
-                if number >= 0 and number < self.origin:
-                    raise ZeroEndPointNotAllowed('Outside unit-based origin.')
-                self._value = number
-            except (ValueError, TypeError) as error:
-                raise EndPointValueError(error)
+            number = int(value_)
+            if number >= 0 and number < self.origin:
+                mesg = 'Zero endpoint not allowed in unit-based interval.'
+                raise ValueError(mesg)
+            self._value = number
 
     @property
     def bound(self):

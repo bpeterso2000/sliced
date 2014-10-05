@@ -2,7 +2,6 @@
 import math
 
 from .endpoint import EndPoint
-from .exceptions import InvalidIntervalType, InvalidStepSize
 
 
 class Interval(object):
@@ -239,14 +238,13 @@ class Interval(object):
         return (type_ & self.RIGHT_OPEN)
 
     def _set_step(self, value):
-            try:
-                step = int(value)
-                if step == 0:
-                    error_mesg = 'Zero is not a valid step size.'
-                    raise InvalidStepSize(error_mesg)
-            except (TypeError, ValueError) as error:
-                raise InvalidStepSize(error)
-            return step
+        """
+        :raises ValueError: Requires a non-zero number
+        """
+        step = int(value)
+        if step == 0:
+            raise ValueError('Zero is not a valid step size.')
+        return step
 
     def set(self, start=None, stop=None, step=None):
         "Set interval endpoints & step size"
