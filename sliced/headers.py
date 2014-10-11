@@ -20,13 +20,13 @@ class Headers(object):
             (?: [a-zA-Z]+\w*)              # unquoted name
         ''', re.VERBOSE)
 
-    def __init__(self, headers, ignore_case=False):
+    def __init__(self, headers, ignorecase=False):
         """
         :param headers (Sequence or dict): can be a sequence of header names
             or a dictionary of index:name.
         """
         self.headers = headers
-        self.ignore_case = ignore_case
+        self.ignorecase = ignorecase
 
     @property
     def headers(self):
@@ -36,28 +36,28 @@ class Headers(object):
     def headers(self, headers):
         if not isinstance(headers, dict):
             header_test = header_dict = {j: i for i, j in enumerate(headers)}
-            if self.ignore_case:
+            if self.ignorecase:
                 header_test = self.lowercase_keys(header_dict)
             self.validate_headers(headers, header_test)
             self._headers = header_dict
 
     @property
-    def ignore_case(self):
-        return getattr(self, '_ignore_case', False)
+    def ignorecase(self):
+        return getattr(self, '_ignorecase', False)
 
-    @ignore_case.setter
-    def ignore_case(self, enabled):
+    @ignorecase.setter
+    def ignorecase(self, enabled):
         if enabled:
             lowercase_headers = self.lowercase_keys(self.headers)
             self.validate_headers(self.headers, lowercase_headers)
-        self._ignore_case = enabled
+        self._ignorecase = enabled
 
     @staticmethod
     def lowercase_keys(dict_):
         return {k.lower(): v for k, v in dict_}
 
     def lowercase_name(self, name):
-        return name[0].lower() if self.ignore_case else name[0]
+        return name[0].lower() if self.ignorecase else name[0]
 
     def validate_headers(self, headers, new_dict):
         if len(headers) != len(new_dict):
@@ -67,7 +67,7 @@ class Headers(object):
 
     def names_to_indices(self, text):
         """uses back quotes to distinguish header names from regular quotes"""
-        headers = (self.lowercase_keys(self.headers) if self.ignore_case
+        headers = (self.lowercase_keys(self.headers) if self.ignorecase
                    else self.headers)
         headers = {i.replace(' ', '_'): j for i, j in headers.items()}
         tokens = self.__class__.column_names.scanString(text)
@@ -75,7 +75,7 @@ class Headers(object):
         last_stop = 0
         for token, start, stop in tokens:
             name = token[0].strip('`')
-            header = name.lower() if self.ignore_case else name
+            header = name.lower() if self.ignorecase else name
             header = header.replace(' ', '_')
             if header not in headers:
                 mesg = 'Unknown column name {!r}.'.format(name)
@@ -84,4 +84,5 @@ class Headers(object):
                 result += text[last_stop:start]
             last_stop = stop
             result += str(headers[header])
+        result = text[last_stop:]
         return result
