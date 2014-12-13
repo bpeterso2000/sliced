@@ -183,8 +183,8 @@ class Grammar(object):
         try:
             slices = self._text_grammar.parseString(text)
         except ParseException as error:
-            import pdb; pdb.set_trace()
-            raise InvalidSliceString(error.msg, error)
+            info = {'text': text, 'column': error.column}
+            raise InvalidSliceString(error.msg, info)
         return (dict(self._slice_grammar.parseString(i)) for i in slices)
 
     def parse(self, text):

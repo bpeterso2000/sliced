@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from collections import Iterator, Sequence
 from itertools import chain
 chained = chain.from_iterable
 
@@ -7,7 +8,39 @@ from .headers import Headers
 from .interval import Interval
 
 
-def slice_(seq, text, dialect=None, headers=None, ignorecase=False):
+def _preprocess(seq, slicestr, headers, ignorecase):
+    if not seq:
+        return (_ for _ in ()), None
+    if isinstance(slicestr, int):
+        slicestr = str(slicestr)
+    slicestr = slicestr.replace('None', '')
+    first_item = None
+    try:
+        is_2d_list = isinstance(seq[0], Sequence)
+    except TypeError:
+        try:
+            first_item = next(seq)
+            seq = chain(first_item, seq)
+        except TypeError:
+            raise
+        except StopIteration:
+            return (_ for _ in ()), None
+    if not isinstance(first_item, (Iterator, Sequence)):
+        seq = list(seq)
+    if not slicestr or slicestr.strip() == ':':
+        return seq, None
+    if headers:
+        h = Headers(headers, ignorecase)
+        slicestr = h.names_to_indices(slicestr)
+    return seq, slicestr
+
+
+def as_list(seq):
+    return list(map(list, seq))
+
+
+def slice_(seq, slicestr, dialect=None, headers=None, ignorecase=False,
+           grammar=None):
     """
     extract columns from rows using a single slice
     ----------------------------------------------
@@ -27,21 +60,23 @@ def slice_(seq, text, dialect=None, headers=None, ignorecase=False):
     :returns:            A list of sliced objects for each each item in the
                          sequence.
     :rtype:              generator
+    :raises:             InvalidSliceString
 
     >>> seq = [['a1', 'a2', 'a3'], ['b1', 'b2', 'b3']]
     >>> list(sliced(seq, '2:'))
     [['a2', 'a3'], ['b2', 'b3']]
     """
-    if headers:
-        h = Headers(headers, ignorecase)
-        text = h.names_to_indices(text)
-    grammar = Grammar(dialect)
+    seq, slicestr = _preprocess(seq, slicestr, headers, ignorecase)
+    if slicestr is None:
+        return seq
+    if not grammar:
+        grammar = Grammar(dialect)
     grammar.allow_slice_list = False
-    slice_ = Interval(**grammar.parse(text)).to_slice()
+    slice_ = Interval(**grammar.parse(slicestr)).to_slice()
     return (i[slice_] for i in seq)
 
 
-def slices(seq, text, dialect=None, headers=None, ignorecase=False):
+def slices(seq, slicestr, dialect=None, headers=None, ignorecase=False):
     """
     extract columns from rows using one or more slice strings
     ---------------------------------------------------------
@@ -74,11 +109,14 @@ def slices(seq, text, dialect=None, headers=None, ignorecase=False):
     >>> list(sliced(seq, '1...3', 'ruby_range'))
     [['a1', 'a2'], ['b1', 'b2']]
     """
-    if headers:
-        h = Header(headers, ignorecase)
-        text = h.names_to_indices(text)
-    slices = [Interval(**i).to_slice() for i in Grammar(dialect).parse(text)]
-    return (list(chained((i[j] for j in slices))) for i in seq)
+    grammar = Grammar(dialect)
+    if not grammar.allow_slice_list or grammar.list_sep not in slicestr:
+        return slice_(seq, slicestr, dialect, headers, ignorecase, grammar)
+    seq, slicestr = _preprocess(seq, slicestr, headers, ignorecase)
+    if slicestr is None:
+        return seq
+    slices = [Interval(**i).to_slice() for i in grammar.parse(slicestr)]
+    return (chained((i[j] for j in slices)) for i in seq)
 
 
 def cut(seq, text):

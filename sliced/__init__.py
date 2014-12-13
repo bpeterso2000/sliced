@@ -9,7 +9,7 @@
 """
 import sliced
 from ._compat import *
-from .core import slice_, slices, cut
+from .core import as_list, slice_, slices, cut
 from .endpoint import EndPoint
 from .exceptions import OptionNotFound, InvalidSliceString, \
     DuplicateItemsNotAllowed

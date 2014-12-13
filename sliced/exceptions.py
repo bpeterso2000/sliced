@@ -2,7 +2,7 @@
 class OptionNotFound(KeyError):
 
     """
-    Similar to KeyNotFound, but displays the list of valid keys
+    Similar to KeyNotFound, but also displays the list of valid keys
     """
 
     def __init__(self, message, errors={}):

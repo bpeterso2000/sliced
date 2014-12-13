@@ -20,11 +20,12 @@ class Headers(object):
             (?: [a-zA-Z]+\w*)              # unquoted name
         ''', re.VERBOSE)
 
-    def __init__(self, headers, ignorecase=False):
+    def __init__(self, headers, ignorecase=False, origin=1):
         """
         :param headers (Sequence or dict): can be a sequence of header names
             or a dictionary of index:name.
         """
+        self.origin = origin
         self.headers = headers
         self.ignorecase = ignorecase
 
@@ -54,7 +55,7 @@ class Headers(object):
 
     @staticmethod
     def lowercase_keys(dict_):
-        return {k.lower(): v for k, v in dict_}
+        return {k.lower(): v for k, v in dict_.items()}
 
     def lowercase_name(self, name):
         return name[0].lower() if self.ignorecase else name[0]
@@ -83,6 +84,6 @@ class Headers(object):
             if start - last_stop > 0:
                 result += text[last_stop:start]
             last_stop = stop
-            result += str(headers[header])
-        result = text[last_stop:]
+            result += str(headers[header] + self.origin)
+        result += text[last_stop:]
         return result
