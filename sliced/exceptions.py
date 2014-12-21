@@ -31,27 +31,6 @@ class OptionNotFound(KeyError):
         return self.message
 
 
-class DuplicateItemsNotAllowed(Exception):
-
-    def __init__(self, message, error=None):
-        Exception.__init__(self, message)
-        self.message = message
-        self.error = {} if error is None else error
-
-    def show_duplicates(self):
-        values = set(self.error.get('values', ['None']))
-        mesg = ', '.join(map(repr, values[:-1]))
-        if len(values) > 1:
-            mesg += ' and ' + values[-1]
-        return 'DuplicateItems:({!r})'.format(mesg)
-
-    def show(self):
-        if isinstance(self.message, dict):
-            if 'values' in self.errors:
-                return '{!r}\n{}'.format(self.message, show_duplicates())
-        return self.message
-
-
 class InvalidSliceString(Exception):
 
     def __init__(self, message='', info=None):
