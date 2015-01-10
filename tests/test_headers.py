@@ -27,7 +27,3 @@ class TestHeaders(unittest.TestCase):
                           ignorecase=True)
         text = '`Col 2`:`col 5`:2, c, `col 1`'
         self.assertEqual(headers.names_to_indices(text), '2:5:2, 3, 1')
-
-    def test_duplicate_headers(self):
-        with self.assertRaises(DuplicateItemsNotAllowed):
-            Headers(['col 1', 'col 2', 'c', 'd', 'col 2'])

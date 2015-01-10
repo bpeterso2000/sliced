@@ -1,11 +1,7 @@
 # -*- coding: utf-8 -*-
-
 import unittest
 
 import sliced
-from sliced.exceptions import EndPointValueError, InvalidIntervalType, \
-    InvalidStepSize
-
 
 class TestIntervalClass(unittest.TestCase):
 
@@ -29,7 +25,7 @@ class TestIntervalClass(unittest.TestCase):
         self.assertEqual(self.interval.type, 'open')
 
     def test_set_invalid_type(self):
-        with self.assertRaises(InvalidIntervalType):
+        with self.assertRaises(sliced.OptionNotFound):
             self.interval.type = 'broken'
 
     def test_set_origin(self):
@@ -53,7 +49,7 @@ class TestIntervalClass(unittest.TestCase):
         self.assertEqual(interval.to_zero_based_endpoints(), (3, 6))
 
     def test_set_invalid_step(self):
-        with self.assertRaises(InvalidStepSize):
+        with self.assertRaises(ValueError):
             self.interval.set(step='a')
 
     def test_to_open(self):
@@ -272,11 +268,11 @@ class TestIntervalClass(unittest.TestCase):
         self.assertEqual(interval.to_slice(-2), slice(-1, None, None))
         self.assertEqual(interval.to_slice(-1, -1), slice(None, -1, None))
         self.assertEqual(interval.to_slice(-1), slice(None, None, None))
-        with self.assertRaises(EndPointValueError):
+        with self.assertRaises(ValueError):
             interval.to_slice(0, 0)
-        with self.assertRaises(EndPointValueError):
+        with self.assertRaises(ValueError):
             interval.to_slice(0, 1)
-        with self.assertRaises(EndPointValueError):
+        with self.assertRaises(ValueError):
             interval.to_slice(0)
         self.assertEqual(interval.to_slice(1, 1), slice(1, 0, None))
         self.assertEqual(interval.to_slice(1, 2), slice(1, 1, None))
@@ -284,7 +280,7 @@ class TestIntervalClass(unittest.TestCase):
         self.assertEqual(interval.to_slice(2), slice(2, None, None))
         self.assertEqual(interval.to_slice(stop=-2), slice(None, -2, None))
         self.assertEqual(interval.to_slice(stop=-1), slice(None, -1, None))
-        with self.assertRaises(EndPointValueError):
+        with self.assertRaises(ValueError):
             interval.to_slice(stop=0)
         self.assertEqual(interval.to_slice(stop=1), slice(None, 0, None))
         self.assertEqual(interval.to_slice(stop=2), slice(None, 1, None))
@@ -296,11 +292,11 @@ class TestIntervalClass(unittest.TestCase):
         self.assertEqual(interval.to_slice(-2), slice(-1, None, None))
         self.assertEqual(interval.to_slice(-1, -1), slice(None, None, None))
         self.assertEqual(interval.to_slice(-1), slice(None, None, None))
-        with self.assertRaises(EndPointValueError):
+        with self.assertRaises(ValueError):
             interval.to_slice(0, 0)
-        with self.assertRaises(EndPointValueError):
+        with self.assertRaises(ValueError):
             interval.to_slice(0, 1)
-        with self.assertRaises(EndPointValueError):
+        with self.assertRaises(ValueError):
             interval.to_slice(0)
         self.assertEqual(interval.to_slice(1, 1), slice(1, 1, None))
         self.assertEqual(interval.to_slice(1, 2), slice(1, 2, None))
@@ -308,7 +304,7 @@ class TestIntervalClass(unittest.TestCase):
         self.assertEqual(interval.to_slice(2), slice(2, None, None))
         self.assertEqual(interval.to_slice(stop=-2), slice(None, -1, None))
         self.assertEqual(interval.to_slice(stop=-1), slice(None, None, None))
-        with self.assertRaises(EndPointValueError):
+        with self.assertRaises(ValueError):
             interval.to_slice(stop=0)
         self.assertEqual(interval.to_slice(stop=1), slice(None, 1, None))
         self.assertEqual(interval.to_slice(stop=2), slice(None, 2, None))
@@ -320,11 +316,11 @@ class TestIntervalClass(unittest.TestCase):
         self.assertEqual(interval.to_slice(-2), slice(-2, None, None))
         self.assertEqual(interval.to_slice(-1, -1), slice(-1, -1, None))
         self.assertEqual(interval.to_slice(-1), slice(-1, None, None))
-        with self.assertRaises(EndPointValueError):
+        with self.assertRaises(ValueError):
             interval.to_slice(0, 0)
-        with self.assertRaises(EndPointValueError):
+        with self.assertRaises(ValueError):
             interval.to_slice(0, 1)
-        with self.assertRaises(EndPointValueError):
+        with self.assertRaises(ValueError):
             interval.to_slice(0)
         self.assertEqual(interval.to_slice(1, 1), slice(0, 0, None))
         self.assertEqual(interval.to_slice(1, 2), slice(0, 1, None))
@@ -332,7 +328,7 @@ class TestIntervalClass(unittest.TestCase):
         self.assertEqual(interval.to_slice(2), slice(1, None, None))
         self.assertEqual(interval.to_slice(stop=-2), slice(None, -2, None))
         self.assertEqual(interval.to_slice(stop=-1), slice(None, -1, None))
-        with self.assertRaises(EndPointValueError):
+        with self.assertRaises(ValueError):
             interval.to_slice(stop=0)
         self.assertEqual(interval.to_slice(stop=1), slice(None, 0, None))
         self.assertEqual(interval.to_slice(stop=2), slice(None, 1, None))
@@ -344,11 +340,11 @@ class TestIntervalClass(unittest.TestCase):
         self.assertEqual(interval.to_slice(-2), slice(-2, None, None))
         self.assertEqual(interval.to_slice(-1, -1), slice(-1, None, None))
         self.assertEqual(interval.to_slice(-1), slice(-1, None, None))
-        with self.assertRaises(EndPointValueError):
+        with self.assertRaises(ValueError):
             interval.to_slice(0, 0)
-        with self.assertRaises(EndPointValueError):
+        with self.assertRaises(ValueError):
             interval.to_slice(0, 1)
-        with self.assertRaises(EndPointValueError):
+        with self.assertRaises(ValueError):
             interval.to_slice(0)
         self.assertEqual(interval.to_slice(1, 1), slice(0, 1, None))
         self.assertEqual(interval.to_slice(1, 2), slice(0, 2, None))
@@ -356,7 +352,7 @@ class TestIntervalClass(unittest.TestCase):
         self.assertEqual(interval.to_slice(2), slice(1, None, None))
         self.assertEqual(interval.to_slice(stop=-2), slice(None, -1, None))
         self.assertEqual(interval.to_slice(stop=-1), slice(None, None, None))
-        with self.assertRaises(EndPointValueError):
+        with self.assertRaises(ValueError):
             interval.to_slice(stop=0)
         self.assertEqual(interval.to_slice(stop=1), slice(None, 1, None))
         self.assertEqual(interval.to_slice(stop=2), slice(None, 2, None))

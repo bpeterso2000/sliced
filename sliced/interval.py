@@ -2,6 +2,7 @@
 import math
 
 from .endpoint import EndPoint
+from .exceptions import OptionNotFound
 
 
 class Interval(object):
@@ -222,13 +223,10 @@ class Interval(object):
             try:
                 return self.__class__.types.index(interval)
             except (IndexError, TypeError, ValueError) as error:
-                raise InvalidIntervalType(error, self.__class__.types)
-        try:
-            value = int(value)
-            if value < 0 or value > 3:
-                InvalidIntervalType('Invalid 2-bit binary number.')
-        except (TypeError, ValueError) as error:
-            raise InvalidIntervalType(error)
+                raise OptionNotFound(error, self.__class__.types)
+        value = int(value)
+        if value < 0 or value > 3:
+            raise ValueError('Invalid 2-bit binary number.')
         return value
 
     def _is_left_open(self, type_):
