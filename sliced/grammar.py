@@ -6,6 +6,10 @@ from pyparsing import Literal, Optional, ZeroOrMore, Regex, \
 from .exceptions import InvalidSliceString, OptionNotFound
 
 
+def _fist_el_to_int(tok):
+    return int(tok[0])
+
+
 class Grammar(object):
 
     digit = Regex(r'\d')
@@ -80,10 +84,6 @@ class Grammar(object):
         self._grammar_update = True
         self._allow_stepped_intervals = enabled
 
-    @staticmethod
-    def _to_int(tok):
-        return int(tok[0])
-
     def get_dialects(self):
         prefix = self.__class__.dialect_method_prefix
         prefix_length = len(prefix)
@@ -157,7 +157,7 @@ class Grammar(object):
         return slice_item + ZeroOrMore(sep + slice_item) + Optional(sep)
 
     def _build_slice_grammar(self):
-        to_int = self.__class__._to_int
+        to_int = lambda tok: int(tok[0])
         endpoint = self.endpoint.setResultsName
         range_sep = self.range_sep.setResultsName('range_sep')
         lower_bound = Optional(endpoint('start').setParseAction(to_int))

@@ -361,7 +361,3 @@ class TestIntervalClass(unittest.TestCase):
         self.assertEqual(interval.to_slice(stop=1), slice(None, 1, None))
         self.assertEqual(interval.to_slice(stop=2), slice(None, 2, None))
         self.assertEqual(interval.to_slice(step=3), slice(None, None, 3))
-
-
-if __name__ == '__main__':
-    unittest.main()

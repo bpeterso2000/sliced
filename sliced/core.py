@@ -7,6 +7,9 @@ from .grammar import Grammar
 from .headers import Headers
 from .interval import Interval
 
+# convert to 2-d sequence
+# slicing required? (empty or copy [:])
+# headers_to_colnums
 
 def _preprocess(seq, slicestr, headers, ignorecase):
     if not seq:
@@ -103,10 +106,10 @@ def slices(seq, slicestr, dialect=None, headers=None, ignorecase=False):
     >>> list(sliced(seq, '1.:3', 'dot_notation'))
     [['a2', 'a3'], ['b2', 'b3']]
 
-    >>> list(sliced(seq, '1..3', 'ruby_range'))
+    >>> list(sliced(seq, '1..3', 'double_dot'))
     [['a1', 'a2', 'a3'], ['b1', 'b2', 'b3']]
 
-    >>> list(sliced(seq, '1...3', 'ruby_range'))
+    >>> list(sliced(seq, '1...3', 'double_dot'))
     [['a1', 'a2'], ['b1', 'b2']]
     """
     grammar = Grammar(dialect)
@@ -133,3 +136,7 @@ def cut(seq, text):
     [['a2', 'a3', 'a1'], ['b2', 'b3', 'b1']]
     """
     return slices(seq, text, 'unix_cut')
+
+if __name__ == '__main__':
+    import doctest
+    doctest.testmod()

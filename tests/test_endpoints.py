@@ -19,7 +19,7 @@ class TestEndPointClass(unittest.TestCase):
         self.assertEqual(self.endpoint.origin, 1)
 
     def test_attempt_to_set_invalid_origin(self):
-        with self.assertRaises(sliced.OriginValueError):
+        with self.assertRaises(ValueError):
             sliced.EndPoint(origin=2)
 
     # --- value setter tests ----
@@ -41,7 +41,7 @@ class TestEndPointClass(unittest.TestCase):
         self.assertEqual(self.endpoint.value, -1)
 
     def test_unable_to_convert_to_an_int(self):
-        with self.assertRaises(sliced.EndPointValueError):
+        with self.assertRaises(ValueError):
             sliced.EndPoint('a')
 
     # --- add/subtract operator tests ---
@@ -277,7 +277,3 @@ class TestEndPointClass(unittest.TestCase):
     def test_print_zero_based_endpoint(self):
         self.endpoint = sliced.EndPoint(1, origin=0)
         self.assertEqual(str(self.endpoint), '1 (zero-based)')
-
-
-if __name__ == '__main__':
-    unittest.main()

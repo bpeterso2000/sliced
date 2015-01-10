@@ -7,35 +7,143 @@ support for single & double-quoted names, wildcards, regular expressions,
 spreadsheet-style alpha ID column headers, column numbers, and hybrid
 combinations of these types.  Leverages the Grammar class to supports provide
 support for different slice string grammars & dialects.
+
+headers is a dictionary { column-index: name, ...}
+where column index is zero-based if origin is 0 or unit-based if origin is 1
+
 """
 
 import re
 import sys
-from collections import Counter, Iterable, OrderedDict
-from functools import partial
+from collections import Counter, OrderedDict
 
 import pyparsing as pp
-from pyparsing import Regex, ParseException
+from pyparsing import CharsNotIn, Group, Or, Regex, ParseException, ZeroOrMore
+from toolz import curry, merge, pipe, valmap
+from unidecode import unidecode
 
 from .exceptions import InvalidSliceString
 from .grammar import Grammar
 
 
-def pipe(data, *funcs):
-    """ Pipe a value through a sequence of functions
-    I.e. ``pipe(data, f, g, h)`` is equivalent to ``h(g(f(data)))``
-    We think of the value as progressing through a pipe of several
-    transformations, much like pipes in UNIX
-    ``$ cat data | f | g | h``
-    >>> double = lambda i: 2 * i
-    >>> pipe(3, double, str)
-    '6'
+def compile_regex(pattern):
+    return re.compile(pattern) if isinstance(pattern, str) else pattern
 
-    source: github.com/pytoolz
+
+def is_str(s):
+    return isinstance(str, s)
+
+
+def to_dict(obj):
+    try:
+        return dict(names)
+    except ValueError:
+        return dict(enumerate(names))
+
+
+def items(obj):
+    return to_dict(obj).items()
+
+
+# --- HEADER TRANSLATIONS (MUNGING) ---
+
+def lowercase(headers):
+    return valmap(str.lower, headers)
+
+
+def remove_accent(headers):
+    return valmap(unidecode)
+
+
+@curry
+def sub(headers, repl='', regex=r''):
+    whitespace = compile_regex(whitespace)
+    return {k: whitespace.sub(repl, v) for k, v in items(headers)}
+
+
+@curry
+def slug(headers, deaccent=True, ignorecase=True,
+         whitespace='_', nonalphanum='',
+         whitespace_re=r'\s+', nonalphanum_re=r'[^\w_]'):
+    actions = (
+        (remove_accent, deaccent),
+        (lowercase, ignorecase),
+        (sub(whitespace, whitespace_re), is_str(whitespace)),
+        (sub(nonalphanum, nonalphanum_re), is_str(nonalphanum))
+    )
+    pipe(headers, *(funct for funct, enabled in actions if enabled))
+
+
+@curry
+def enum_dups(headers, numfmt='{name}-{num}'):
     """
-    for func in funcs:
-        data = func(data)
-    return data
+    Numbers duplicate header names to avoid ambiguity
+    :param headers: dict of column indexes and associated header names
+    :type headers:  {int, str}
+
+    >>> number_duplicates_({0:'date', 1:'value', 2:'date'})
+    {0: 'date-1', 1: 'value', 2: 'date-2'}
+
+    """
+    hdrs = dict_(headers)
+    format_name = lambda name, num: numfmt.format(name=name, num=num)
+    duplicates = {k: v for k, v in Counter(hdrs.values()).items() if v > 1}
+    for duplicate in duplicates:
+        dups = {k: v for k, v in hdrs.items() if v == duplicate}
+        sorted_dups = enumerate(sorted(dups.items()), 1)
+        headers.update ({i[0]: format_name(n, i) for n, i in sorted_dups})
+    return headers
+
+# --- SPREADSHEET-STYLE COLUMN ALPHA ID HEADERS ---
+
+def id2num(s):
+    """ spreadsheet column name to number
+    ref: http://stackoverflow.com/questions/7261936
+
+   :param s: str -- spreadsheet column alpha ID (i.e. A, B, ... AA, AB,...)
+   :returns: int -- spreadsheet column number (zero-based index)
+
+    >>> id2num('A')
+    0
+    >>> id2num('B')
+    1
+    >>> id2num('XFD')
+    16383
+    >>>
+
+    """
+    n = 0
+    for ch in s.upper():
+        n = n * 26 + (ord(ch) - 65) + 1
+    return n - 1
+
+
+def num2id(n):
+    """
+    ref: http://stackoverflow.com/questions/181596
+
+   :param n: int -- spreadsheet column number (zero-based index)
+   :returns: int -- spreadsheet column alpha ID (i.e. A, B, ... AA, AB,...)
+
+    >>> num2id(0)
+    'A'
+    >>> num2id(1)
+    'B'
+    >>> num2id(16383)
+    'XFD'
+
+    """
+    s = ''
+    d = n + 1
+    while d:
+        m = (d - 1) % 26
+        s = chr(65 + m) + s
+        d = int((d - m) / 26)
+    return s
+
+
+def get_ids(num_ids):
+    return {i: num2id(i) for i in range(num_ids)}
 
 
 class Headers(object):
@@ -51,52 +159,47 @@ class Headers(object):
     * Escape literal quote characters inside headers names with a backslash.
     """
 
-    def __init__(self, headers=None, grammar=None, origin=1, ignorecase=True,
+    def __init__(self, headers=None,
+                 grammar=None, origin=1,
+                 deaccent=True, ignorecase=True,
                  allow_alphaids=False, allow_colnums=True,
                  allow_wildcards=True, allow_regexes=True,
-                 replace_whitespace=True, whitespace=r'\s+',
-                 number_duplicates=True):
+                 whitespace='_', nonalphanums='',
+                 numfmt='{name}-{num}'):
 
+        self.origin = origin
         self.headers = headers if headers else {}
         self.grammar = grammar if grammar else Grammar()
-        self.origin = origin
 
         self.ignorecase = ignorecase
-        self.number_duplicates = number_duplicates
+        self.allow_alphaid = allow_alphaids
+        self.allow_colnum = allow_colnums
+        self.allow_wildcard = allow_wildcards
+        self.allow_regex = allow_regexes
 
-        self.allow_alphaids = allow_alphaids
-        self.allow_colnums = allow_colnums
-        self.allow_wildcards = allow_wildcards
-        self.allow_regexes = allow_regexes
+        # --- HEADER MUNGING FUNCTIONS ---
+        self.munge = OrderedDict([
+            ('slugify', slug(deaccent=deaccent,
+                             ignorecase=ignorecase,
+                             whitespace=whitespace,
+                             nonalphanums=nonalphanums)),
+            ('number_duplicates', enum_dups(numfmt=numfmt))
+        ])
 
-        # --- HEADER MUNGING ---
-        # keys can be toggled on/off by with a class attrib of the same name
-        # values are the transformation functions
-        # partial function keywords can only be set during class construction
-        # or by explicitly updating the partial function in the translation 
-        # attribute
-        replace_whitespace = '_' if replace_whitespace else None
-        self.translation = OrderedDict({
-            'ignorecase':         ignorecase_,
-            'replace_whitespace': partial(replace_whitespace_,
-                                          whitespace=whitespace,
-                                          replace_with=replace_whitespace),
-            'number_duplicates':  number_duplicates_
+        # --- HEADER PARSING FUNCTIONS ---
+        seps = list({
+            self.grammar.list_sep,
+            self.grammar.range_sep,
+            self.grammar.step_sep
         })
-
-        # --- SLICE STRING HEADER PARSING ---
-        # keys can be toggled on/off by with a class attrib of the same name
-        # prefixed with allow_
-        # except for keys starting with an underscore, they are always on
-        seps = list({self.grammar.list_sep, self.grammar.range_sep,
-                     self.grammar.step_sep})
         quotedstr = pp.quotedString.setParseAction(pp.removeQuotes)
-        self.tokenizers = OrderedDict({
-            'regexes': 'r' + quotedstr,
-            '_quoted': quotedstr,
-            'colnums': Grammar.integer,
-            '_sep':    Or(seps),
-            '_names':  CharsNotIn(seps),
+
+        self.tokens = OrderedDict({
+            'regex': 'r'.Supress() + quotedstr,
+            'quoted': quotedstr,
+            'colnum': Grammar.integer,
+            'sep': Or(seps),
+            'name': CharsNotIn(seps),
         })
 
     @property
@@ -116,99 +219,19 @@ class Headers(object):
 
     # --- HEADER TRANSLATION FUNCTIONS ---
 
-    @staticmethod
-    def replace_whitespace_(headers, replace_with='_'):
-        if replace_with:
-            if not isinstance(replace_with, str):
-                replace_with = '_'
-            return {k: WHITESPACE.sub(replace_with, v)
-                    for k, v in headers.items()}
-        return headers
-
-    @staticmethod
-    def ignorecase_(headers):
-        return {k: v.lower() for k, v in headers.items()}
-
-    @staticmethod
-    def number_duplicates_(headers, numfmt='{name}-{num}'):
-        """
-        Numbers duplicate header names to avoid ambiguity
-        :param headers: dict of column indexes and associated header names
-        :type headers:  {int, str}
-        """
-        hdrfmt = numsep.join(['{[1]}', '{}'])
-        duplicates = {k: v for k, v in Counter(headers.values()).items() if v > 1}
-        for duplicate in duplicates:
-            dups = {k: v for k, v in headers.items() if v == duplicate}
-            sorted_dups = enumerate(sorted(duplicated.items()), 1)
-            headers.update ({i[0]: numfmt.format(name=i[0], num=n)
-                            for n, i in sorted_dups})
-        return headers
-
-    # --- SPREADSHEET-STYLE COLUMN ALPHA ID HEADERS ---
-
-    @staticmethod
-    def id2num(s):
-        """ spreadsheet column name to number
-        http://stackoverflow.com/questions/7261936
-
-       :param s: str -- spreadsheet column alpha ID (i.e. A, B, ... AA, AB,...)
-       :returns: int -- spreadsheet column number (zero-based index)
-
-        >>> id2num('A')
-        0
-        >>> id2num('B')
-        1
-        >>> id2num('XFD')
-        16383
-        >>>
-
-        """
-        n = 0
-        for ch in s.upper():
-            n = n * 26 + (ord(ch) - 65) + 1
-        return n - 1
-
-
-    @staticmethod
-    def num2id(n):
-        """
-        reference: http://stackoverflow.com/questions/181596
-
-       :param n: int -- spreadsheet column number (zero-based index)
-       :returns: int -- spreadsheet column alpha ID (i.e. A, B, ... AA, AB,...)
-
-        >>> num2id(0)
-        'A'
-        >>> num2id(1)
-        'B'
-        >>> num2id(16383)
-        'XFD'
-
-        """
-        s = ''
-        d = n + 1
-        while d:
-            m = (d - 1) % 26
-            s = chr(65 + m) + s
-            d = int((d - m) / 26)
-        return s
-
-    @staticmethod
-    def get_ids(num_ids):
-        return {i: num2id(i) for i in range(num_ids)}
-
     def add_alphaids(self):
         num_ids = 0
         if self.allow_alphaids:
-            if not isinstance(self.allow_alphaids, [int, float]):
-                num_ids = (len(pp.alphas) // 2) ** 2
-            num_ids = int(self.allow_alphaids)
-        return [num2id(i + 1) for i in range(num_ids)]
+            try:
+                num_ids = int(self.allow_alphaids)
+            except (TypeError, ValueError):
+                num_ids = 676
+        return {i: num2id(i + 1) for i in range(num_ids)}
 
     def munge_headers(self):
-        functs = [v for k, v in self.translation.items() if getattr(self, k)]
-        return pipe(add_alphaids().update(self.headers), *functs)
+        functs = (v for k, v in self.munge.items()
+                  if getattr(self, 'allow_' + k, True))
+        return pipe(merge(self.add_alphaids(), self.headers), *functs)
 
     def parse_text(self, text):
         try:
@@ -218,23 +241,6 @@ class Headers(object):
             raise InvalidSliceString(error.msg, info)
 
     def build_parser(self):
-        tokenizers = [v.setResultsName(k) for k, v in self.tokenizers.items()
-                      if not k.startswith('_') and getattr(self, k, True)]
-        return ZeroOrMore(Group(Or(tokenizers))) + pp.stringEnd
-
-
-"""
-tokenizer = []
-if self.allow_regexes:
-    regex  = 'r' + pp.quotedString.setParseAction(pp.removeQuotes)
-    tokenizer.append(regex.setResultsName('regex'))
-quoted_name = pp.quotedString.setParseAction(pp.removeQuotes)
-tokenizer.append(quoted_name.setResultsName('name'))
-if self.allow_colnums:
-    tokenizer.append(Grammar.integer.setResultsName('colnum'))
-seps = list({self.grammar.list_sep, self.grammar.range_sep,
-             self.grammar.step_sep})
-tokenizer.append(Or(seps).setResultsName('sep'))
-tokenizer.append(CharsNotIn(seps).setResultsName('name'))
-self.tokenizer = ZeroOrMore(Group(Or(tokenizer))) + pp.stringEnd
-"""
+        tokens = (v.setResultsName(k) for k, v in self.tokens.items()
+                  if not k.startswith('_') and getattr(self, k, True))
+        return ZeroOrMore(Group(Or(tokens))) + pp.stringEnd

@@ -22,7 +22,7 @@ class TestGrammarClass(unittest.TestCase):
         self.grammar.dialect = 'python_slice'
         self.assertEqual(self.grammar.dialect, 'python_slice')
         self.assertFalse(self.grammar.allow_slice_list)
-        with self.assertRaises(sliced.UnknownDialect):
+        with self.assertRaises(sliced.OptionNotFound):
             self.grammar.dialect = 'bad dialect'
 
     def test_allow_relative_indices(self):
@@ -96,9 +96,6 @@ class TestGrammarClass(unittest.TestCase):
         with self.assertRaises(sliced.InvalidSliceString):
             self.grammar.parse_text('1:2')
 
-    def test_to_int(self):
-        self.assertEqual(self.grammar._to_int(['2']), 2)
-
     def test_get_dialects(self):
         self.assertEqual(set(self.grammar.get_dialects()), {'slice_list',
             'python_slice', 'dot_notation', 'double_dot', 'unix_cut'})
@@ -114,17 +111,17 @@ class TestGrammarClass(unittest.TestCase):
     def test_validate_separators(self):
         self.assertTrue(self.grammar.validate_separators())
         self.grammar.range_sep = 'a'
-        with self.assertRaises(sliced.InvalidSeparator):
+        with self.assertRaises(ValueError):
             self.grammar.validate_separators()
         self.grammar.range_sep = ':'
         self.assertTrue(self.grammar.validate_separators())
         self.grammar.step_sep = 'a'
-        with self.assertRaises(sliced.InvalidSeparator):
+        with self.assertRaises(ValueError):
             self.grammar.validate_separators()
         self.grammar.step_sep = ':'
         self.assertTrue(self.grammar.validate_separators())
         self.grammar.list_sep = 'a'
-        with self.assertRaises(sliced.InvalidSeparator):
+        with self.assertRaises(ValueError):
             self.grammar.validate_separators()
 
     def test_get_slice_item(self):
@@ -146,7 +143,3 @@ class TestGrammarClass(unittest.TestCase):
        self.assertEqual(grammar.parseString('2:3:4').asList(), ['2:3:4'])
        self.assertEqual(grammar.parseString('2, 2:3:4, 6').asList(),
                         ['2', '2:3:4', '6'])
-
-
-if __name__ == '__main__':
-    unittest.main()

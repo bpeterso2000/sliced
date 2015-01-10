@@ -2,7 +2,7 @@ import unittest
 
 import sliced
 from sliced.headers import Headers
-from sliced.exceptions import InvalidSliceString, DuplicateItemsNotAllowed
+from sliced.exceptions import InvalidSliceString
 
 class TestHeaders(unittest.TestCase):
 
@@ -31,7 +31,3 @@ class TestHeaders(unittest.TestCase):
     def test_duplicate_headers(self):
         with self.assertRaises(DuplicateItemsNotAllowed):
             Headers(['col 1', 'col 2', 'c', 'd', 'col 2'])
-
-
-if __name__ == '__main__':
-    unittest.main()

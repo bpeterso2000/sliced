@@ -27,6 +27,3 @@ class TestCoreFunctions(unittest.TestCase):
                          ['b0', 'b1', 'b2']])
         self.assertEqual(list(cut(self.seq, '3-5, 7')),
                          [['a2', 'a3', 'a4', 'a6'], ['b2', 'b3', 'b4', 'b6']])
-
-if __name__ == '__main__':
-    unittest.main()
