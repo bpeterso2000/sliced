@@ -2,7 +2,7 @@
 import math
 
 from .endpoint import EndPoint
-from .exceptions import OptionNotFound
+from ..exceptions import OptionNotFound
 
 
 class Interval(object):

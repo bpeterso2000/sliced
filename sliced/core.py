@@ -4,8 +4,8 @@ from itertools import chain
 chained = chain.from_iterable
 
 from .grammar import Grammar
-from .headers import Headers
-from .interval import Interval
+from .headers.header import Headers
+from .intervals.interval import Interval
 
 # convert to 2-d sequence
 # slicing required? (empty or copy [:])
@@ -66,7 +66,7 @@ def slice_(seq, slicestr, dialect=None, headers=None, ignorecase=False,
     :raises:             InvalidSliceString
 
     >>> seq = [['a1', 'a2', 'a3'], ['b1', 'b2', 'b3']]
-    >>> list(sliced(seq, '2:'))
+    >>> list(slice_(seq, '2:'))
     [['a2', 'a3'], ['b2', 'b3']]
     """
     seq, slicestr = _preprocess(seq, slicestr, headers, ignorecase)
@@ -97,19 +97,19 @@ def slices(seq, slicestr, dialect=None, headers=None, ignorecase=False):
     :rtype:              generator
 
     >>> seq = [['a1', 'a2', 'a3'], ['b1', 'b2', 'b3']]
-    >>> list(sliced(seq, '2:, 1'))
+    >>> list(slices(seq, '2:, 1'))
     [['a2', 'a3', 'a1'], ['b2', 'b3', 'b1']]
 
-    >>> list(sliced(seq, '1.:.3', 'dot_notation'))
+    >>> list(slices(seq, '1.:.3', 'dot_notation'))
     [['a2'], ['b2']]
 
-    >>> list(sliced(seq, '1.:3', 'dot_notation'))
+    >>> list(slices(seq, '1.:3', 'dot_notation'))
     [['a2', 'a3'], ['b2', 'b3']]
 
-    >>> list(sliced(seq, '1..3', 'double_dot'))
+    >>> list(slices(seq, '1..3', 'double_dot'))
     [['a1', 'a2', 'a3'], ['b1', 'b2', 'b3']]
 
-    >>> list(sliced(seq, '1...3', 'double_dot'))
+    >>> list(slices(seq, '1...3', 'double_dot'))
     [['a1', 'a2'], ['b1', 'b2']]
     """
     grammar = Grammar(dialect)
@@ -119,7 +119,7 @@ def slices(seq, slicestr, dialect=None, headers=None, ignorecase=False):
     if slicestr is None:
         return seq
     slices = [Interval(**i).to_slice() for i in grammar.parse(slicestr)]
-    return (chained((i[j] for j in slices)) for i in seq)
+    return map(list, (chained(i[j] for j in slices) for i in seq))
 
 
 def cut(seq, text):

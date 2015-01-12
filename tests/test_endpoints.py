@@ -1,12 +1,12 @@
 import unittest
 
-import sliced
+from sliced.intervals.endpoint import EndPoint
 
 
 class TestEndPointClass(unittest.TestCase):
 
     def setUp(self):
-        self.endpoint = sliced.EndPoint()
+        self.endpoint = EndPoint()
 
     # --- origin setter tests ----
 
@@ -20,7 +20,7 @@ class TestEndPointClass(unittest.TestCase):
 
     def test_attempt_to_set_invalid_origin(self):
         with self.assertRaises(ValueError):
-            sliced.EndPoint(origin=2)
+            EndPoint(origin=2)
 
     # --- value setter tests ----
 
@@ -42,13 +42,13 @@ class TestEndPointClass(unittest.TestCase):
 
     def test_unable_to_convert_to_an_int(self):
         with self.assertRaises(ValueError):
-            sliced.EndPoint('a')
+            EndPoint('a')
 
     # --- add/subtract operator tests ---
 
     def test_add_endpoint_to_endpoint(self):
         self.endpoint.value = 1
-        self.assertEqual((self.endpoint + sliced.EndPoint(1)).value, 2)
+        self.assertEqual((self.endpoint + EndPoint(1)).value, 2)
 
     def test_increment_endpoint(self):
         self.endpoint.value = 1
@@ -60,7 +60,7 @@ class TestEndPointClass(unittest.TestCase):
 
     def test_subtract_endpoint_from_endpoint(self):
         self.endpoint.value = 2
-        self.assertEqual((self.endpoint - sliced.EndPoint(1)).value, 1)
+        self.assertEqual((self.endpoint - EndPoint(1)).value, 1)
 
     def test_decrement_endpoint_below_origin(self):
         self.endpoint.value = 2
@@ -77,7 +77,7 @@ class TestEndPointClass(unittest.TestCase):
 
     def test_in_place_add_endpoint(self):
         self.endpoint.value = 1
-        self.endpoint += sliced.EndPoint(1)
+        self.endpoint += EndPoint(1)
         self.assertEqual(self.endpoint, 2)
 
     def test_in_place_add_equals_none(self):
@@ -91,7 +91,7 @@ class TestEndPointClass(unittest.TestCase):
 
     def test_in_place_subtract_endpoint(self):
         self.endpoint.value = 2
-        self.endpoint -= sliced.EndPoint(1)
+        self.endpoint -= EndPoint(1)
         self.assertEqual(self.endpoint, 1)
 
     def test_in_place_subtract_equals_none(self):
@@ -107,7 +107,7 @@ class TestEndPointClass(unittest.TestCase):
 
     def test_endpoint_equals_endpoint(self):
         self.endpoint.value = 1
-        self.assertTrue(self.endpoint == sliced.EndPoint(1))
+        self.assertTrue(self.endpoint == EndPoint(1))
 
     def test_unbounded_endpoint_equals_an_int(self):
         self.assertIsNone(self.endpoint == 1)
@@ -124,7 +124,7 @@ class TestEndPointClass(unittest.TestCase):
 
     def test_endpoint_not_equals_endpoint(self):
         self.endpoint.value = 1
-        self.assertTrue(self.endpoint == sliced.EndPoint(1))
+        self.assertTrue(self.endpoint == EndPoint(1))
 
     def test_unbounded_endpoint_not_equals_an_int(self):
         self.assertFalse(self.endpoint != 1)
@@ -141,7 +141,7 @@ class TestEndPointClass(unittest.TestCase):
 
     def test_endpoint_greater_than_endpoint(self):
         self.endpoint.value = 1
-        self.assertTrue(self.endpoint == sliced.EndPoint(1))
+        self.assertTrue(self.endpoint == EndPoint(1))
 
     def test_unbounded_endpoint_greater_than_none(self):
         self.assertIsNone(self.endpoint > None)
@@ -275,5 +275,5 @@ class TestEndPointClass(unittest.TestCase):
         self.assertEqual(str(self.endpoint), '1 (unit-based)')
 
     def test_print_zero_based_endpoint(self):
-        self.endpoint = sliced.EndPoint(1, origin=0)
+        self.endpoint = EndPoint(1, origin=0)
         self.assertEqual(str(self.endpoint), '1 (zero-based)')
