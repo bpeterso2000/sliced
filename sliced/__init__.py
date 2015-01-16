@@ -9,20 +9,16 @@
 """
 import sliced
 from ._compat import *
+from . import headers
+from . import intervals
 from .core import as_list, slice_, slices, cut
 from .exceptions import OptionNotFound, InvalidSliceString
 from .grammar import Grammar
-from .headers.header import Headers
-from .headers.alphaids import num2id, id2num, get_ids
-from .headers.slugs import Slugs, slugify
-from .intervals.interval import Interval
-from .intervals.interval import EndPoint
 
 
-__all__ = [
-    'slices', 'slice_', 'cut',
-    'EndPoint', 'Interval', 'Grammar', 'Header', 'Slug'
-    'OptionsNotFound', 'InvalidSliceString'
-]
+__all__ = ('as_list', 'slices', 'slice_', 'cut',
+           'OptionsNotFound', 'InvalidSliceString',
+           'headers', 'intervals')
+
 
 __version__ = '0.1a'

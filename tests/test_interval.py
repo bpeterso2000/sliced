@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 import unittest
 
-import sliced
+from sliced.intervals import Interval
+from sliced.exceptions import OptionNotFound
 
 class TestIntervalClass(unittest.TestCase):
 
     def setUp(self):
-        self.interval = sliced.Interval()
+        self.interval = Interval()
 
     def test_set_type_closed(self):
         self.interval.type = 'closed'
@@ -25,7 +26,7 @@ class TestIntervalClass(unittest.TestCase):
         self.assertEqual(self.interval.type, 'open')
 
     def test_set_invalid_type(self):
-        with self.assertRaises(sliced.OptionNotFound):
+        with self.assertRaises(OptionNotFound):
             self.interval.type = 'broken'
 
     def test_set_origin(self):
@@ -41,11 +42,11 @@ class TestIntervalClass(unittest.TestCase):
         self.assertEqual(self.interval.stride, 2)
 
     def to_zero_based_endpoints(self):
-        interval = sliced.Interval(start=2, stop=5)
+        interval = Interval(start=2, stop=5)
         self.assertEqual(interval.to_zero_based_endpoints(), (1, 4))
 
     def to_unit_based_endpoints(self):
-        interval = sliced.Interval(start=2, stop=5, origin=0)
+        interval = Interval(start=2, stop=5, origin=0)
         self.assertEqual(interval.to_zero_based_endpoints(), (3, 6))
 
     def test_set_invalid_step(self):
@@ -83,103 +84,103 @@ class TestIntervalClass(unittest.TestCase):
 
     def test_is_degenerate(self):
         self.assertFalse(self.interval.degenerate)
-        self.assertFalse(sliced.Interval(stop=1).degenerate)
-        self.assertFalse(sliced.Interval(1).degenerate)
-        self.assertTrue(sliced.Interval(1, 1).degenerate)
-        self.assertTrue(sliced.Interval(-1, -1).degenerate)
+        self.assertFalse(Interval(stop=1).degenerate)
+        self.assertFalse(Interval(1).degenerate)
+        self.assertTrue(Interval(1, 1).degenerate)
+        self.assertTrue(Interval(-1, -1).degenerate)
 
     def test_is_proper(self):
         self.assertTrue(self.interval.proper)
-        self.assertFalse(sliced.Interval(2, 1).proper)
-        self.assertTrue(sliced.Interval(1).proper)
-        self.assertFalse(sliced.Interval(1, 1).proper)
-        self.assertFalse(sliced.Interval(-1, -1).proper)
+        self.assertFalse(Interval(2, 1).proper)
+        self.assertTrue(Interval(1).proper)
+        self.assertFalse(Interval(1, 1).proper)
+        self.assertFalse(Interval(-1, -1).proper)
 
     def test_is_empty(self):
         self.assertFalse(self.interval.empty)
-        self.assertTrue(sliced.Interval(2, 1).empty)
-        self.assertFalse(sliced.Interval(1).empty)
-        self.assertFalse(sliced.Interval(1, 1).empty)
-        self.assertFalse(sliced.Interval(-1, -1).empty)
+        self.assertTrue(Interval(2, 1).empty)
+        self.assertFalse(Interval(1).empty)
+        self.assertFalse(Interval(1, 1).empty)
+        self.assertFalse(Interval(-1, -1).empty)
 
     def test_is_unbounded(self):
         self.assertTrue(self.interval.unbounded)
-        self.assertTrue(sliced.Interval(1).unbounded)
-        self.assertTrue(sliced.Interval(1).unbounded)
-        self.assertFalse(sliced.Interval(1, 1).unbounded)
-        self.assertFalse(sliced.Interval(-1, -1).unbounded)
+        self.assertTrue(Interval(1).unbounded)
+        self.assertTrue(Interval(1).unbounded)
+        self.assertFalse(Interval(1, 1).unbounded)
+        self.assertFalse(Interval(-1, -1).unbounded)
 
     def test_test_is_left_bounded(self):
         self.assertFalse(self.interval.left_bounded)
-        self.assertFalse(sliced.Interval(stop=1).left_bounded)
-        self.assertTrue(sliced.Interval(1).left_bounded)
-        self.assertTrue(sliced.Interval(1, 1).left_bounded)
-        self.assertTrue(sliced.Interval(-1, -1).left_bounded)
+        self.assertFalse(Interval(stop=1).left_bounded)
+        self.assertTrue(Interval(1).left_bounded)
+        self.assertTrue(Interval(1, 1).left_bounded)
+        self.assertTrue(Interval(-1, -1).left_bounded)
 
     def test_is_right_bounded(self):
         self.assertFalse(self.interval.right_bounded)
-        self.assertTrue(sliced.Interval(stop=1).right_bounded)
-        self.assertFalse(sliced.Interval(1).right_bounded)
-        self.assertTrue(sliced.Interval(1, 1).right_bounded)
-        self.assertTrue(sliced.Interval(-1, -1).right_bounded)
+        self.assertTrue(Interval(stop=1).right_bounded)
+        self.assertFalse(Interval(1).right_bounded)
+        self.assertTrue(Interval(1, 1).right_bounded)
+        self.assertTrue(Interval(-1, -1).right_bounded)
 
     def test_is_bounded(self):
         self.assertFalse(self.interval.bounded)
-        self.assertFalse(sliced.Interval(stop=1).bounded)
-        self.assertFalse(sliced.Interval(1).bounded)
-        self.assertTrue(sliced.Interval(1, 1).bounded)
-        self.assertTrue(sliced.Interval(-1, -1).bounded)
+        self.assertFalse(Interval(stop=1).bounded)
+        self.assertFalse(Interval(1).bounded)
+        self.assertTrue(Interval(1, 1).bounded)
+        self.assertTrue(Interval(-1, -1).bounded)
 
     def test_is_left_open(self):
-        self.assertTrue(sliced.Interval(type_='open').left_open)
-        self.assertTrue(sliced.Interval(type_='left-open').left_open)
-        self.assertFalse(sliced.Interval(type_='right-open').left_open)
-        self.assertFalse(sliced.Interval(type_='closed').left_open)
+        self.assertTrue(Interval(type_='open').left_open)
+        self.assertTrue(Interval(type_='left-open').left_open)
+        self.assertFalse(Interval(type_='right-open').left_open)
+        self.assertFalse(Interval(type_='closed').left_open)
 
     def test_is_right_open(self):
-        self.assertTrue(sliced.Interval(type_='open').right_open)
-        self.assertFalse(sliced.Interval(type_='left-open').right_open)
-        self.assertTrue(sliced.Interval(type_='right-open').right_open)
-        self.assertFalse(sliced.Interval(type_='closed').right_open)
+        self.assertTrue(Interval(type_='open').right_open)
+        self.assertFalse(Interval(type_='left-open').right_open)
+        self.assertTrue(Interval(type_='right-open').right_open)
+        self.assertFalse(Interval(type_='closed').right_open)
 
     def test_is_left_closed(self):
-        self.assertFalse(sliced.Interval(type_='open').left_closed)
-        self.assertFalse(sliced.Interval(type_='left-open').left_closed)
-        self.assertTrue(sliced.Interval(type_='right-open').left_closed)
-        self.assertTrue(sliced.Interval(type_='closed').left_closed)
+        self.assertFalse(Interval(type_='open').left_closed)
+        self.assertFalse(Interval(type_='left-open').left_closed)
+        self.assertTrue(Interval(type_='right-open').left_closed)
+        self.assertTrue(Interval(type_='closed').left_closed)
 
     def test_is_right_closed(self):
-        self.assertFalse(sliced.Interval(type_='open').right_closed)
-        self.assertTrue(sliced.Interval(type_='left-open').right_closed)
-        self.assertFalse(sliced.Interval(type_='right-open').right_closed)
-        self.assertTrue(sliced.Interval(type_='closed').right_closed)
+        self.assertFalse(Interval(type_='open').right_closed)
+        self.assertTrue(Interval(type_='left-open').right_closed)
+        self.assertFalse(Interval(type_='right-open').right_closed)
+        self.assertTrue(Interval(type_='closed').right_closed)
 
     def test_is_half_open(self):
-        self.assertFalse(sliced.Interval(type_='open').half_open)
-        self.assertTrue(sliced.Interval(type_='left-open').half_open)
-        self.assertTrue(sliced.Interval(type_='right-open').half_open)
-        self.assertFalse(sliced.Interval(type_='closed').half_open)
+        self.assertFalse(Interval(type_='open').half_open)
+        self.assertTrue(Interval(type_='left-open').half_open)
+        self.assertTrue(Interval(type_='right-open').half_open)
+        self.assertFalse(Interval(type_='closed').half_open)
 
     def test_is_half_closed(self):
-        self.assertFalse(sliced.Interval(type_='open').half_closed)
-        self.assertTrue(sliced.Interval(type_='left-open').half_closed)
-        self.assertTrue(sliced.Interval(type_='right-open').half_closed)
-        self.assertFalse(sliced.Interval(type_='closed').half_closed)
+        self.assertFalse(Interval(type_='open').half_closed)
+        self.assertTrue(Interval(type_='left-open').half_closed)
+        self.assertTrue(Interval(type_='right-open').half_closed)
+        self.assertFalse(Interval(type_='closed').half_closed)
 
     def test_is_open(self):
-        self.assertTrue(sliced.Interval(type_='open').open)
-        self.assertFalse(sliced.Interval(type_='left-open').open)
-        self.assertFalse(sliced.Interval(type_='right-open').open)
-        self.assertFalse(sliced.Interval(type_='closed').open)
+        self.assertTrue(Interval(type_='open').open)
+        self.assertFalse(Interval(type_='left-open').open)
+        self.assertFalse(Interval(type_='right-open').open)
+        self.assertFalse(Interval(type_='closed').open)
 
     def test_is_closed(self):
-        self.assertFalse(sliced.Interval(type_='open').closed)
-        self.assertFalse(sliced.Interval(type_='left-open').closed)
-        self.assertFalse(sliced.Interval(type_='right-open').closed)
-        self.assertTrue(sliced.Interval(type_='closed').closed)
+        self.assertFalse(Interval(type_='open').closed)
+        self.assertFalse(Interval(type_='left-open').closed)
+        self.assertFalse(Interval(type_='right-open').closed)
+        self.assertTrue(Interval(type_='closed').closed)
 
     def test_zero_based_open_slice(self):
-        interval = sliced.Interval(origin=0, type_='open')
+        interval = Interval(origin=0, type_='open')
         self.assertEqual(interval.to_slice(-2, -1), slice(-1, -1, None))
         self.assertEqual(interval.to_slice(-2), slice(-1, None, None))
         self.assertEqual(interval.to_slice(-1, -1), slice(None, -1, None))
@@ -200,7 +201,7 @@ class TestIntervalClass(unittest.TestCase):
         self.assertEqual(interval.to_slice(step=3), slice(None, None, 3))
 
     def test_zero_based_left_open_slice(self):
-        interval = sliced.Interval(origin=0, type_='left-open')
+        interval = Interval(origin=0, type_='left-open')
         self.assertEqual(interval.to_slice(-2, -1), slice(-1, None, None))
         self.assertEqual(interval.to_slice(-2), slice(-1, None, None))
         self.assertEqual(interval.to_slice(-1, -1), slice(None, None, None))
@@ -221,7 +222,7 @@ class TestIntervalClass(unittest.TestCase):
         self.assertEqual(interval.to_slice(step=3), slice(None, None, 3))
 
     def test_zero_based_right_open_slice(self):
-        interval = sliced.Interval(origin=0, type_='right-open')
+        interval = Interval(origin=0, type_='right-open')
         self.assertEqual(interval.to_slice(-2, -1), slice(-2, -1, None))
         self.assertEqual(interval.to_slice(-2), slice(-2, None, None))
         self.assertEqual(interval.to_slice(-1, -1), slice(-1, -1, None))
@@ -242,7 +243,7 @@ class TestIntervalClass(unittest.TestCase):
         self.assertEqual(interval.to_slice(step=3), slice(None, None, 3))
 
     def test_zero_based_closed_slice(self):
-        interval = sliced.Interval(origin=0, type_='closed')
+        interval = Interval(origin=0, type_='closed')
         self.assertEqual(interval.to_slice(-2, -1), slice(-2, None, None))
         self.assertEqual(interval.to_slice(-2), slice(-2, None, None))
         self.assertEqual(interval.to_slice(-1, -1), slice(-1, None, None))
@@ -263,7 +264,7 @@ class TestIntervalClass(unittest.TestCase):
         self.assertEqual(interval.to_slice(step=3), slice(None, None, 3))
 
     def test_unit_based_open_slice(self):
-        interval = sliced.Interval(type_='open')
+        interval = Interval(type_='open')
         self.assertEqual(interval.to_slice(-2, -1), slice(-1, -1, None))
         self.assertEqual(interval.to_slice(-2), slice(-1, None, None))
         self.assertEqual(interval.to_slice(-1, -1), slice(None, -1, None))
@@ -287,7 +288,7 @@ class TestIntervalClass(unittest.TestCase):
         self.assertEqual(interval.to_slice(step=3), slice(None, None, 3))
 
     def test_unit_based_left_open_slice(self):
-        interval = sliced.Interval(type_='left-open')
+        interval = Interval(type_='left-open')
         self.assertEqual(interval.to_slice(-2, -1), slice(-1, None, None))
         self.assertEqual(interval.to_slice(-2), slice(-1, None, None))
         self.assertEqual(interval.to_slice(-1, -1), slice(None, None, None))
@@ -311,7 +312,7 @@ class TestIntervalClass(unittest.TestCase):
         self.assertEqual(interval.to_slice(step=3), slice(None, None, 3))
 
     def test_unit_based_right_open_slice(self):
-        interval = sliced.Interval(type_='right-open')
+        interval = Interval(type_='right-open')
         self.assertEqual(interval.to_slice(-2, -1), slice(-2, -1, None))
         self.assertEqual(interval.to_slice(-2), slice(-2, None, None))
         self.assertEqual(interval.to_slice(-1, -1), slice(-1, -1, None))
@@ -335,7 +336,7 @@ class TestIntervalClass(unittest.TestCase):
         self.assertEqual(interval.to_slice(step=3), slice(None, None, 3))
 
     def test_unit_based_closed_slice(self):
-        interval = sliced.Interval(type_='closed')
+        interval = Interval(type_='closed')
         self.assertEqual(interval.to_slice(-2, -1), slice(-2, None, None))
         self.assertEqual(interval.to_slice(-2), slice(-2, None, None))
         self.assertEqual(interval.to_slice(-1, -1), slice(-1, None, None))
